@@ -1,0 +1,197 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.7in,top=0.75in,bottom=0.75in]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage[colorlinks=true,linkcolor=gimpanavy,urlcolor=gimpaaccent]{hyperref}
+
+% --- Custom Colors ---
+\definecolor{gimpanavy}{RGB}{0, 43, 73}
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}
+\definecolor{gimpalight}{RGB}{245, 247, 251}
+\definecolor{darkgreen}{RGB}{30, 140, 60}
+\definecolor{darkred}{RGB}{180, 40, 40}
+
+\lstset{
+    basicstyle=\small\ttfamily,
+    keywordstyle=\color{gimpanavy}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{darkgreen},
+    frame=single,
+    backgroundcolor=\color{gimpalight},
+    breaklines=true,
+    showstringspaces=false
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{GIMPA} $|$ CS 305 Theory of Computation}
+\lhead{\small\textbf{Student Hands-On Lab Manual}}
+\rfoot{\small Page \thepage}
+\lfoot{\small Automaton Simulator Guide}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{gimpanavy}GHANA INSTITUTE OF MANAGEMENT AND PUBLIC ADMINISTRATION}}\\
+    {\large \textbf{\color{gimpaaccent}School of Technology $|$ Department of Computer Science}}\\
+    \vspace{4pt}
+    \hrule height 1.2pt \color{gimpanavy}
+    \vspace{6pt}
+    {\LARGE \textbf{\color{gimpanavy}CS 305: Hands-On Visual Automata Lab Manual}}\\
+    {\large \textbf{Interactive Machine Design \& Simulation with \href{https://automatonsimulator.com/}{\texttt{automatonsimulator.com}}}}
+\end{center}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[colback=gimpalight, colframe=gimpanavy, title=\textbf{Laboratory Overview \& Objectives}]
+\textbf{Goal:} To bridge theoretical formal definitions with visual, interactive execution. By the end of this tutorial, students will be able to:
+\begin{enumerate}[leftmargin=1.5em, itemsep=2pt]
+    \item Visually construct and simulate \textbf{DFAs}, \textbf{NFAs}, \textbf{Pushdown Automata (PDAs)}, and \textbf{Turing Machines (TMs)}.
+    \item Trace step-by-step execution states and visualize non-deterministic branching in real time.
+    \item Run automated batch test suites to verify language acceptance and debug rejected strings.
+\end{enumerate}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+% ==============================================================================
+\section*{1. Getting Started with Automaton Simulator}
+% ==============================================================================
+Navigate to the free web-based simulator: \textbf{\url{https://automatonsimulator.com/}} (works on Chrome, Firefox, Safari, and Edge without installing any software or plugins).
+
+\subsection*{1.1 Quick UI Controls \& Shortcuts}
+\begin{center}
+\rowcolors{2}{gimpalight}{white}
+\begin{tabularx}{\textwidth}{l X}
+    \toprule
+    \textbf{Action} & \textbf{Mouse / Keyboard Instruction} \\
+    \midrule
+    \textbf{Create State} & \textbf{Double-click} anywhere on the blank canvas. \\
+    \textbf{Set Start State} & Click a state $\to$ Toggle the \textbf{Start State} option (arrow appears). \\
+    \textbf{Set Accept State} & Click a state $\to$ Toggle the \textbf{Accepting State} option (double circle appears). \\
+    \textbf{Create Transition} & Hold \textbf{Shift} + click and drag from state $A$ to state $B$. Enter transition symbol. \\
+    \textbf{Create Self-Loop} & Hold \textbf{Shift} + click and drag from state $A$ back to state $A$. \\
+    \textbf{Epsilon ($\varepsilon$) Move} & In NFAs or PDAs, leave the input field empty or enter \texttt{\textbackslash e}. \\
+    \textbf{Delete Element} & Click the state or transition line $\to$ Press \textbf{Backspace} or \textbf{Delete}. \\
+    \textbf{Move / Reposition} & Click and drag any state to arrange clean layout geometry. \\
+    \bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{8pt}
+
+% ==============================================================================
+\section*{2. Tutorial 1: Building Your First DFA (Strings Ending in '01')}
+% ==============================================================================
+\textbf{Objective:} Build a DFA over alphabet $\Sigma = \{0, 1\}$ accepting $L = \{w \in \{0, 1\}^* \mid w \text{ ends with } 01\}$.
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{Select Machine Type:} In the top menu, select \textbf{Finite Automaton (DFA/NFA)}.
+    \item \textbf{Create States:} Double-click to create three states: $q_0$ (Start), $q_1$ (Saw '0'), and $q_2$ (Saw '01' --- Accept).
+    \item \textbf{Set Start \& Accept:}
+    \begin{itemize}
+        \item Click $q_0$ $\to$ check \textbf{Start}.
+        \item Click $q_2$ $\to$ check \textbf{Accepting}.
+    \end{itemize}
+    \item \textbf{Add Transitions:}
+    \begin{itemize}
+        \item From $q_0$: Shift-drag to $q_0$ with label \texttt{1}; Shift-drag to $q_1$ with label \texttt{0}.
+        \item From $q_1$: Shift-drag to $q_1$ with label \texttt{0}; Shift-drag to $q_2$ with label \texttt{1}.
+        \item From $q_2$: Shift-drag to $q_1$ with label \texttt{0}; Shift-drag to $q_0$ with label \texttt{1}.
+    \end{itemize}
+    \item \textbf{Step-by-Step Simulation:}
+    \begin{itemize}
+        \item In the bottom testing panel, enter input string: \texttt{100101}.
+        \item Click \textbf{Step Forward} ($\blacktriangleright$) repeatedly. Watch the active state glow green as each character is consumed!
+        \item Verify that the machine halts in accept state $q_2$ (\textbf{ACCEPTED}).
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+
+% ==============================================================================
+\section*{3. Tutorial 2: Visualizing NFA Non-Determinism}
+% ==============================================================================
+\textbf{Objective:} Build an NFA for $L = \{w \mid w \text{ contains substring } 101\}$ and observe multiple simultaneous active branches.
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=4pt]
+    \item Create 4 states: $q_0$ (Start), $q_1, q_2, q_3$ (Accept).
+    \item Transitions:
+    \begin{itemize}
+        \item At $q_0$: Add self-loops on \texttt{0} and \texttt{1}. Add transition to $q_1$ on \texttt{1}.
+        \item At $q_1$: Add transition to $q_2$ on \texttt{0}.
+        \item At $q_2$: Add transition to $q_3$ on \texttt{1}.
+        \item At $q_3$: Add self-loops on \texttt{0} and \texttt{1}.
+    \end{itemize}
+    \item \textbf{Observe Non-Deterministic Parallel Simulation:}
+    \begin{itemize}
+        \item Enter string \texttt{011010}. Click \textbf{Step Forward}.
+        \item Notice that when the first \texttt{1} is read, the simulator lights up \textbf{both} $q_0$ and $q_1$ simultaneously!
+        \item If a branch reaches a dead end, it disappears. If at least one branch lands on $q_3$, the string is accepted.
+    \end{itemize}
+\end{enumerate}
+
+\vspace{8pt}
+
+% ==============================================================================
+\section*{4. Tutorial 3: Simulating Pushdown Automata (PDAs) with Stack Memory}
+% ==============================================================================
+\textbf{Objective:} Build a PDA for the non-regular language $L = \{0^n 1^n \mid n \ge 0\}$.
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{Switch Mode:} In the top bar, set Machine Type to \textbf{Pushdown Automaton (PDA)}.
+    \item \textbf{Stack Syntax in the Simulator:} Transitions are labeled as \texttt{input, pop -> push}.
+    \begin{itemize}
+        \item \texttt{0, e -> 0} $\implies$ Read input \texttt{0}, pop nothing ($\varepsilon$), push \texttt{0} onto stack.
+        \item \texttt{1, 0 -> e} $\implies$ Read input \texttt{1}, pop \texttt{0} from stack, push nothing ($\varepsilon$).
+        \item \texttt{e, \$ -> e} $\implies$ Read empty input, pop stack bottom marker \texttt{\$}, Accept!
+    \end{itemize}
+    \item \textbf{Watch the Stack Pane:} During simulation, watch the vertical stack visualization dynamically grow and shrink as symbols are pushed and popped in LIFO order!
+\end{enumerate}
+
+\vspace{8pt}
+
+% ==============================================================================
+\section*{5. Tutorial 4: Simulating Turing Machines (Tape Visualization)}
+% ==============================================================================
+\textbf{Objective:} Trace a Turing Machine deciding $L = \{0^n 1^n 0^n \mid n \ge 0\}$.
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=4pt]
+    \item Set Machine Type to \textbf{Turing Machine}.
+    \item \textbf{Tape Transition Syntax:} \texttt{read -> write, direction} (e.g., \texttt{0 -> X, R} or \texttt{1 -> Y, L}).
+    \item \textbf{Tape Animation:} Watch the virtual read/write head traverse the infinite tape cells, modifying symbols and reversing directions!
+\end{enumerate}
+
+\vspace{8pt}
+
+% ==============================================================================
+\section*{6. Graded Laboratory Assignment (Due in Lab Session)}
+% ==============================================================================
+\begin{tcolorbox}[colback=white, colframe=gimpaaccent, title=\textbf{Student Submission Tasks}]
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item Build a DFA on \url{https://automatonsimulator.com/} that accepts all binary strings containing an \textbf{odd number of 1's and an even number of 0's}.
+    \item Use the \textbf{Export $\to$ PNG / SVG} feature to export your state diagram.
+    \item In the \textbf{Test Suite Panel}, run batch tests on strings: \texttt{10}, \texttt{010}, \texttt{1100}, \texttt{10011}. Take a screenshot of the batch test table results.
+    \item Submit the PNG diagram and test table screenshot to the GIMPA Learning Management System.
+\end{enumerate}
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+    \small\color{darkgray}
+    \textit{CS 305 Theory of Computation --- Ghana Institute of Management and Public Administration (GIMPA)}
+\end{center}
+
+\end{document}

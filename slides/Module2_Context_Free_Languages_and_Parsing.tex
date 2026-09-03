@@ -1,0 +1,210 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta, shapes.geometric, calc}
+
+% --- Custom Colors ---
+\definecolor{gimpanavy}{RGB}{0, 43, 73}
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}
+\definecolor{gimpalight}{RGB}{245, 247, 251}
+\definecolor{gimpaheader}{RGB}{230, 238, 248}
+\definecolor{darkred}{RGB}{180, 40, 40}
+\definecolor{darkgreen}{RGB}{30, 140, 60}
+\definecolor{papergold}{RGB}{210, 140, 10}
+
+\setbeamercolor{palette primary}{bg=gimpanavy,fg=white}
+\setbeamercolor{palette secondary}{bg=gimpaaccent,fg=white}
+\setbeamercolor{palette tertiary}{bg=gimpanavy,fg=white}
+\setbeamercolor{structure}{fg=gimpanavy}
+\setbeamercolor{titlelike}{parent=structure,bg=gimpaheader}
+\setbeamercolor{block title}{bg=gimpanavy,fg=white}
+\setbeamercolor{block body}{bg=gimpalight}
+\setbeamercolor{block title alerted}{bg=darkred,fg=white}
+\setbeamercolor{block title example}{bg=darkgreen,fg=white}
+
+% --- Title Information ---
+\title[CS 305 $|$ Module 2]{Module 2: Context-Free Languages, Grammars \& Modern Parsing}
+\subtitle{CS 305: Theory of Computation (Weeks 6--8)}
+\author[GIMPA School of Technology]{Department of Computer Science}
+\institute[GIMPA]{Ghana Institute of Management and Public Administration (GIMPA)}
+\date{Level 300 Undergraduate}
+
+\begin{document}
+
+% --- Title Slide ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Overview Slide ---
+\begin{frame}{Module 2 Roadmap: Weeks 6 to 8}
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{block}{Theoretical Foundations}
+            \begin{itemize}\setlength{\itemsep}{3pt}
+                \item \textbf{Wk 6:} CFGs, Derivations, Ambiguity \& Chomsky Normal Form (CNF)
+                \item \textbf{Wk 7:} Pushdown Automata (PDAs) \& Stack Memory
+                \item \textbf{Wk 8:} Non-CFL Pumping Lemma \& Midterm
+            \end{itemize}
+        \end{block}
+        
+        \column{0.48\textwidth}
+        \begin{alertblock}{Research Literature \& System Spotlights}
+            \begin{itemize}\setlength{\itemsep}{3pt}
+                \item \textbf{Wk 6:} \textbf{NeurIPS 2023:} Guided LLM Generation (\texttt{outlines})
+                \item \textbf{Wk 7:} \textbf{PLDI 2011:} ANTLR LL(*) Parser Generators
+                \item \textbf{Wk 8:} \textbf{TACL 2020:} Attention Failures on Dyck Languages
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% ==============================================================================
+\section{Week 6: Context-Free Grammars (CFGs)}
+% ==============================================================================
+
+\begin{frame}{Week 6: Context-Free Grammars (CFGs)}
+    \begin{block}{Formal Definition (Sipser Def 2.2)}
+        A \textbf{Context-Free Grammar (CFG)} is a 4-tuple $(V, \Sigma, R, S)$:
+        \begin{enumerate}
+            \item $V$ is a finite set of \textbf{variables} (non-terminals).
+            \item $\Sigma$ is a finite set of \textbf{terminals} (disjoint from $V$).
+            \item $R$ is a finite set of \textbf{rules} of the form $A \to u$, where $A \in V$ and $u \in (V \cup \Sigma)^*$.
+            \item $S \in V$ is the designated \textbf{start variable}.
+        \end{enumerate}
+    \end{block}
+    
+    \begin{exampleblock}{Classic Example: Palindromes and Nested Structures}
+        Grammar $G_1 = (\{S\}, \{0, 1\}, R, S)$ with rules:
+        $$S \to 0S0 \mid 1S1 \mid \varepsilon$$
+        Generates the language of all even-length binary palindromes $L(G_1) = \{w w^{\mathcal{R}} \mid w \in \{0, 1\}^*\}$.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 6 Research Spotlight: Guided Generation for Large Language Models}
+    \begin{exampleblock}{Seminal Reading: NeurIPS Foundation Models Workshop 2023}
+        \textbf{Willard \& Louf}, \textit{``Efficient Guided Generation for Large Language Models,''} \textbf{NeurIPS 2023} (HuggingFace \texttt{outlines} framework).
+    \end{exampleblock}
+    
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{block}{The Industrial Problem}
+            \begin{itemize}
+                \item LLMs frequently output invalid JSON (missing closing braces, hallucinated keys).
+                \item Breaking API pipelines in production software.
+            \end{itemize}
+        \end{block}
+        
+        \column{0.48\textwidth}
+        \begin{alertblock}{The Theory Solution: CFG Logit Masking}
+            \begin{itemize}
+                \item Convert JSON Schema into an equivalent Pushdown Automaton / CFG parser.
+                \item Mask invalid token logits with $-\infty$ at each decoding step.
+                \item \textbf{100\% mathematical guarantee of valid JSON!}
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% ==============================================================================
+\section{Week 7: Pushdown Automata (PDAs)}
+% ==============================================================================
+
+\begin{frame}{Week 7: Pushdown Automata (PDAs)}
+    \begin{block}{Formal Definition (Sipser Def 2.13)}
+        A \textbf{Nondeterministic Pushdown Automaton (PDA)} is a 6-tuple $(Q, \Sigma, \Gamma, \delta, q_0, F)$:
+        \begin{itemize}
+            \item $\Gamma$ is the finite \textbf{stack alphabet}.
+            \item $\delta: Q \times \Sigma_{\varepsilon} \times \Gamma_{\varepsilon} \to \mathcal{P}(Q \times \Gamma_{\varepsilon})$ allows reading input and pushing/popping from the stack.
+        \end{itemize}
+    \end{block}
+    
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \draw[thick] (0,0) -- (0,3) -- (1.5,3) -- (1.5,0) -- cycle;
+            \node at (0.75, 0.5) {\texttt{\$}};\draw (0,1) -- (1.5,1);
+            \node at (0.75, 1.5) {\texttt{0}};\draw (0,2) -- (1.5,2);
+            \node at (0.75, 2.5) {\texttt{0}};
+            \node[above] at (0.75, 3) {\textbf{LIFO Stack}};
+        \end{tikzpicture}
+        \end{center}
+        \column{0.48\textwidth}
+        \begin{alertblock}{Main Equivalence Theorem}
+            $$\text{Language Recognizable by PDA} \iff \text{Context-Free Language (CFG)}$$
+            \textit{Stack memory provides unbounded storage, but only with Last-In-First-Out access.}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% ==============================================================================
+\section{Week 8: Non-CFL Pumping Lemma \& Transformer Limitations}
+% ==============================================================================
+
+\begin{frame}{Week 8: Pumping Lemma for Context-Free Languages}
+    \begin{block}{Formal Statement (Sipser Thm 2.34)}
+        If $L$ is context-free, then there exists a pumping length $p \ge 1$ such that any $s \in L$ with $|s| \ge p$ can be written as $s = uvxyz$ satisfying:
+        \begin{enumerate}
+            \item $u v^i x y^i z \in L$ for all $i \ge 0$,
+            \item $|vy| > 0$ (at least one of $v$ or $y$ is non-empty),
+            \item $|vxy| \le p$.
+        \end{enumerate}
+    \end{block}
+    
+    \begin{exampleblock}{Classic Non-Context-Free Languages}
+        \begin{itemize}
+            \item $L_1 = \{a^n b^n c^n \mid n \ge 0\}$ (Requires matching 3 quantities $\implies$ single stack fails!).
+            \item $L_2 = \{w w \mid w \in \{0, 1\}^*\}$ (Exact duplicate matching $\implies$ non-LIFO!).
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 8 Research Spotlight: TACL 2020 \& Attention Limits on Dyck Languages}
+    \begin{exampleblock}{Seminal Reading: TACL 2020}
+        \textbf{Michael Hahn (Stanford Univ.)}, \textit{``Theoretical Limitations of Self-Attention in Neural Sequence Models,''} \textbf{Transactions of the Association for Computational Linguistics (TACL 2020)}.
+    \end{exampleblock}
+    
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{block}{The Dyck-k Language Problem}
+            \begin{itemize}
+                \item Dyck-$k$ consists of well-nested brackets: \texttt{[ ( \{ \} ) ]}.
+                \item Recognized in $\mathcal{O}(n)$ linear time by a PDA using a stack.
+            \end{itemize}
+        \end{block}
+        
+        \column{0.48\textwidth}
+        \begin{alertblock}{Why Standard Attention Fails}
+            \begin{itemize}
+                \item Self-attention with bounded layers has bounded circuit depth ($\textsf{TC}^0$).
+                \item Cannot track arbitrary nesting depth beyond its context window without explicit recurrence or scratchpad!
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% --- Summary Slide ---
+\begin{frame}{Module 2 Summary: The Boundary of Context-Free Languages}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}\setlength{\itemsep}{3pt}
+            \item \textbf{Context-Free Grammars} and \textbf{Pushdown Automata} handle nested, recursive structures (programming languages, JSON, XML).
+            \item A single stack is strictly limited: it cannot verify multi-way constraints like $a^n b^n c^n$ or cross-serial dependencies $ww$.
+        \end{itemize}
+    \end{block}
+    
+    \begin{exampleblock}{Looking Ahead: Module 3 (Turing Machines \& Decidability)}
+        What happens if we replace the restricted stack with an \textbf{infinite, bidirectional read-write tape}? We unlock the full power of general-purpose computers: \textbf{Turing Machines!}
+    \end{exampleblock}
+\end{frame}
+
+\end{document}

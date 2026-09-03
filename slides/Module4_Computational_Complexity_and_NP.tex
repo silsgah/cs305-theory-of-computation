@@ -1,0 +1,226 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta, shapes.geometric, calc}
+
+% --- Custom Colors ---
+\definecolor{gimpanavy}{RGB}{0, 43, 73}
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}
+\definecolor{gimpalight}{RGB}{245, 247, 251}
+\definecolor{gimpaheader}{RGB}{230, 238, 248}
+\definecolor{darkred}{RGB}{180, 40, 40}
+\definecolor{darkgreen}{RGB}{30, 140, 60}
+\definecolor{papergold}{RGB}{210, 140, 10}
+
+\setbeamercolor{palette primary}{bg=gimpanavy,fg=white}
+\setbeamercolor{palette secondary}{bg=gimpaaccent,fg=white}
+\setbeamercolor{palette tertiary}{bg=gimpanavy,fg=white}
+\setbeamercolor{structure}{fg=gimpanavy}
+\setbeamercolor{titlelike}{parent=structure,bg=gimpaheader}
+\setbeamercolor{block title}{bg=gimpanavy,fg=white}
+\setbeamercolor{block body}{bg=gimpalight}
+\setbeamercolor{block title alerted}{bg=darkred,fg=white}
+\setbeamercolor{block title example}{bg=darkgreen,fg=white}
+
+% --- Title Information ---
+\title[CS 305 $|$ Module 4]{Module 4: Computational Complexity, Cryptography \& NP}
+\subtitle{CS 305: Theory of Computation (Weeks 13--15)}
+\author[GIMPA School of Technology]{Department of Computer Science}
+\institute[GIMPA]{Ghana Institute of Management and Public Administration (GIMPA)}
+\date{Level 300 Undergraduate}
+
+\begin{document}
+
+% --- Title Slide ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Overview Slide ---
+\begin{frame}{Module 4 Roadmap: Weeks 13 to 15}
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{block}{Theoretical Foundations}
+            \begin{itemize}\setlength{\itemsep}{3pt}
+                \item \textbf{Wk 13:} Asymptotic Growth \& Class $\mathbf{P}$
+                \item \textbf{Wk 14:} Class $\mathbf{NP}$, Cook--Levin Theorem \& Polynomial-Time Reductions ($\le_{\text{P}}$)
+                \item \textbf{Wk 15:} Course Synthesis, $\mathbf{P}$ vs. $\mathbf{NP}$ Millennium Prize \& Intro to $\mathbf{BQP}$
+            \end{itemize}
+        \end{block}
+        
+        \column{0.48\textwidth}
+        \begin{alertblock}{Research Literature \& System Spotlights}
+            \begin{itemize}\setlength{\itemsep}{3pt}
+                \item \textbf{Wk 13:} Scalability: $\mathcal{O}(n^2)$ vs. $\mathcal{O}(2^n)$ in Production
+                \item \textbf{Wk 14:} \textbf{TACAS 2008:} Industrial SAT/SMT Solvers (Z3) \& \textbf{USENIX 2016:} Post-Quantum Crypto
+                \item \textbf{Wk 15:} \textbf{SIAM 1997:} Shor's Quantum Factoring Algorithm
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% ==============================================================================
+\section{Week 13: Time Complexity \& Class P}
+% ==============================================================================
+
+\begin{frame}{Week 13: Measuring Time Complexity (Sipser Ch. 7.1)}
+    \begin{block}{Definition: Time Complexity}
+        Let $M$ be a deterministic Turing machine that halts on all inputs. The \textbf{running time} or \textbf{time complexity} of $M$ is the function $f: \mathbb{N} \to \mathbb{N}$, where:
+        $$f(n) = \text{maximum number of steps that } M \text{ uses on any input of length } n.$$
+    \end{block}
+    
+    \begin{exampleblock}{The Class P (Polynomial Time)}
+        $$\mathbf{P} = \bigcup_{k \ge 0} \text{TIME}(n^k)$$
+        \textbf{The Cobham-Edmonds Thesis:} $\mathbf{P}$ is the mathematical class of problems that are \textbf{realistically solvable on computers} (tractable).
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 13 Spotlight: Polynomial vs. Exponential in Production}
+    \begin{center}
+    \small
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Time Complexity} & \textbf{$n = 10$} & \textbf{$n = 50$} & \textbf{$n = 100$} & \textbf{$n = 1000$} \\
+        \midrule
+        $\mathcal{O}(n \log n)$ (MergeSort) & $3.3 \times 10^{-8}$ s & $2.8 \times 10^{-7}$ s & $6.6 \times 10^{-7}$ s & $1.0 \times 10^{-5}$ s \\
+        $\mathcal{O}(n^2)$ (QuickSort worst) & $1.0 \times 10^{-7}$ s & $2.5 \times 10^{-6}$ s & $1.0 \times 10^{-5}$ s & $1.0 \times 10^{-3}$ s \\
+        $\mathcal{O}(n^3)$ (Matrix Multiply) & $1.0 \times 10^{-6}$ s & $1.25 \times 10^{-4}$ s & $1.0 \times 10^{-3}$ s & $1.0$ s \\
+        \midrule
+        \rowcolor{red!15}
+        $\mathcal{O}(2^n)$ (Brute Force 3SAT) & $1.0 \times 10^{-6}$ s & \textbf{35.7 years} & \textbf{$4 \times 10^{13}$ years} & \textbf{Heat death} \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.1cm}
+    \begin{alertblock}{Production Insight}
+        The boundary between $\mathcal{O}(n^k)$ and $\mathcal{O}(2^n)$ is not merely an academic definition; it is the physical dividing line between what software can execute in real time vs. what will never terminate.
+    \end{alertblock}
+\end{frame}
+
+% ==============================================================================
+\section{Week 14: Class NP \& NP-Completeness}
+% ==============================================================================
+
+\begin{frame}{Week 14: The Class NP (Nondeterministic Polynomial Time)}
+    \begin{block}{Two Equivalent Definitions of NP (Sipser Def 7.19)}
+        \begin{enumerate}
+            \item \textbf{Nondeterministic TM Definition:} $\mathbf{NP} = \bigcup_{k \ge 0} \text{NTIME}(n^k)$. (Languages decidable in polynomial time by an NTM).
+            \item \textbf{Polynomial Verifier Definition:} $L \in \mathbf{NP} \iff$ there exists a deterministic polynomial-time verifier $V(w, c)$ such that:
+            $$w \in L \iff \exists \text{ certificate/witness } c \text{ with } |c| \le \text{poly}(|w|) \text{ such that } V(w, c) \text{ accepts}.$$
+        \end{enumerate}
+    \end{block}
+    
+    \begin{exampleblock}{Intuition: Solving vs. Checking}
+        \begin{itemize}
+            \item \textbf{Sudoku / 3SAT / Password Cracking:} Extremely hard to \textit{find} a solution from scratch ($\mathcal{O}(2^n)$).
+            \item But once someone gives you a candidate solution, it takes only \textbf{$\mathcal{O}(n)$ time to verify}!
+        \end{itemize}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Week 14: Polynomial-Time Reductions \& The Cook--Levin Theorem}
+    \begin{block}{Polynomial-Time Reduction ($\mathbf{A \le_{\text{P}} B}$)}
+        Language $A$ polynomial-time reduces to $B$ if there exists a polynomial-time computable function $f: \Sigma^* \to \Sigma^*$ such that:
+        $$w \in A \iff f(w) \in B$$
+    \end{block}
+    
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{alertblock}{NP-Completeness Definition}
+            A language $B$ is \textbf{NP-complete} if:
+            \begin{enumerate}
+                \item $B \in \mathbf{NP}$, and
+                \item Every $A \in \mathbf{NP}$ satisfies $A \le_{\text{P}} B$.
+            \end{enumerate}
+        \end{alertblock}
+        
+        \column{0.48\textwidth}
+        \begin{exampleblock}{The Cook--Levin Theorem (1971)}
+            $$\text{SAT} = \{\langle \phi \rangle \mid \phi \text{ is a satisfiable Boolean formula}\} \text{ is \textbf{NP-complete}!}$$
+            \textbf{Karp's Reductions:} 3SAT $\to$ CLIQUE $\to$ VERTEX-COVER $\to$ SUBSET-SUM.
+        \end{exampleblock}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Week 14 Research Spotlight: TACAS 2008 \& USENIX Security 2016}
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{exampleblock}{Industrial SAT/SMT: TACAS 2008}
+            \textbf{De Moura \& Bj{\o}rner (Microsoft Research)}, \textit{``Z3: An Efficient SMT Solver,''} \textbf{TACAS 2008}.
+            \begin{itemize}\small
+                \item CDCL solvers solve NP-complete formulas with \textbf{1,000,000+ variables}!
+                \item Used by Amazon AWS and Intel for formal verification of cloud infrastructure and silicon chips.
+            \end{itemize}
+        \end{exampleblock}
+        
+        \column{0.48\textwidth}
+        \begin{alertblock}{Post-Quantum Crypto: USENIX 2016}
+            \textbf{Alkim et al.}, \textit{``Post-Quantum Key Exchange: A New Hope,''} \textbf{USENIX Security 2016}.
+            \begin{itemize}\small
+                \item If $\mathbf{P}=\mathbf{NP}$, all public-key crypto breaks!
+                \item NIST standardizes Lattice Cryptography (Kyber/Dilithium) based on the worst-case hardness of high-dimensional lattice problems.
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% ==============================================================================
+\section{Week 15: The P vs. NP Millennium Problem \& Quantum Computing}
+% ==============================================================================
+
+\begin{frame}{Week 15 Research Spotlight: Quantum Complexity Class BQP \& Shor's Algorithm}
+    \begin{exampleblock}{Seminal Reading: SIAM J. Comput. 1997 / IEEE FOCS 1994}
+        \textbf{Peter Shor (MIT / Bell Labs)}, \textit{``Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer,''} \textbf{SIAM Journal on Computing 1997}.
+    \end{exampleblock}
+    
+    \begin{columns}[T]
+        \column{0.48\textwidth}
+        \begin{block}{The Quantum Complexity Class $\mathbf{BQP}$}
+            \begin{itemize}
+                \item Bounded-error Quantum Polynomial time ($\mathbf{BQP}$).
+                \item $\mathbf{P} \subseteq \mathbf{BQP}$.
+                \item Prime Factorization is in $\mathbf{BQP}$ (runs in $\mathcal{O}(n^3)$ quantum time via QFT), but not known to be in $\mathbf{P}$.
+            \end{itemize}
+        \end{block}
+        
+        \column{0.48\textwidth}
+        \begin{alertblock}{Does Quantum Solve NP-Complete?}
+            \begin{itemize}
+                \item \textbf{General Belief:} $\mathbf{NP} \not\subseteq \mathbf{BQP}$.
+                \item Quantum computers speed up search (Grover's $\mathcal{O}(\sqrt{N})$), but are \textbf{not} believed to solve $\mathbf{NP}$-complete problems in polynomial time!
+            \end{itemize}
+        \end{alertblock}
+    \end{columns}
+\end{frame}
+
+% --- Summary Slide ---
+\begin{frame}{Course Grand Synthesis: What Have We Learned?}
+    \begin{center}
+    \small
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{Model / Grammar} & \textbf{Memory Mechanism} & \textbf{Language Class} & \textbf{Real-World System} \\
+        \midrule
+        \textbf{DFA / NFA} & Finite States (No stack) & Regular & Lexers, ReDoS, Firewalls \\
+        \textbf{Pushdown Automaton} & LIFO Stack & Context-Free & Compilers, LLM JSON Masks \\
+        \textbf{Turing Machine} & Infinite Read/Write Tape & Decidable / Recognizable & General Computers, CoT LLMs \\
+        \textbf{Complexity Classes} & Bounded Time ($\mathcal{O}(n^k)$) & $\mathbf{P}$ vs. $\mathbf{NP}$ & Crypto, SAT Solvers, Optimization \\
+        \bottomrule
+    \end{tabular}
+    \end{center}
+    \vspace{0.2cm}
+    \begin{exampleblock}{Final Word to GIMPA Level 300 Graduates}
+        You now possess the mathematical language that describes every computing device that has ever existed, and every computing machine that will ever be built.
+    \end{exampleblock}
+\end{frame}
+
+\end{document}

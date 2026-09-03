@@ -1,0 +1,43 @@
+Theory of Computation
+Course Syllabus and 15-Week Schedule
+Course Description
+This course introduces the formal models used to define what a computation is and what its limits are. It covers three main areas in sequence: automata and formal languages, computability, and complexity theory. Each unit builds on the previous one — finite automata motivate the need for more powerful models, which in turn motivates the question of what no model can do, and finally what can be done efficiently.
+Primary Text
+Michael Sipser, Introduction to the Theory of Computation, 3rd edition, Cengage Learning. Chapter and section numbers below refer to this edition. An older edition can be used, but numbering of examples may differ slightly.
+Learning Outcomes
+•	Construct and reason about finite automata, regular expressions, and context-free grammars.
+•	Prove that a language is not regular or not context-free using the pumping lemma.
+•	Explain the Turing machine model and the Church–Turing thesis, and trace TM computations.
+•	Prove that a problem is undecidable using diagonalization or reduction.
+•	Classify problems by time complexity and prove NP-completeness using reductions from known NP-complete problems.
+Assessment Breakdown
+•	Problem sets (4, biweekly): 30%
+•	Quizzes (2, short): 10%
+•	Midterm examination: 20%
+•	Term project or presentation: 10%
+•	Final examination: 30%
+Weekly Schedule
+Wk	Topic	Sipser Reference	In-Class Activity	Assessment
+1	Course overview; alphabets, strings, languages; why formal models matter	Ch. 0	Diagnostic exercise on set/relation notation	—
+2	Deterministic finite automata (DFA)	1.1	Build DFAs for given languages	Problem set 1 assigned
+3	Nondeterministic finite automata (NFA); equivalence with DFA	1.2	Subset construction practice	Problem set 1 due
+4	Regular expressions; equivalence with finite automata	1.3	Convert regex to NFA and back	Quiz 1
+5	Nonregular languages; the pumping lemma	1.4	Pumping lemma proofs, worked examples	Problem set 2 assigned
+6	Context-free grammars (CFG)	2.1	Derivations, parse trees, ambiguity	Problem set 2 due
+7	Pushdown automata (PDA); equivalence with CFGs	2.2	PDA construction exercises	Midterm review
+8	Midterm examination; non-context-free languages, pumping lemma for CFLs	2.3	Timed exam, then proof practice	Midterm exam
+9	Turing machines: definition and variants	3.1–3.2	Trace TM computations by hand	Problem set 3 assigned
+10	Equivalence of TM variants; the Church–Turing thesis	3.3	Discussion: what counts as an algorithm	Problem set 3 due
+11	Decidability; decidable languages	4.1	Decision procedures for regular/CFL problems	Quiz 2
+12	Undecidability; the halting problem; reductions	4.2, 5.1	Diagonalization walkthrough; reduction proofs	Problem set 4 assigned
+13	Time complexity; the class P	7.1–7.2	Analyze running times of known algorithms	Problem set 4 due
+14	The class NP; NP-completeness; Cook–Levin theorem	7.3–7.4	SAT and reduction-based NP-completeness proofs	Term project presentations
+15	Review and synthesis; course wrap-up	Review	Comprehensive problem walkthrough	Final exam
+
+Notes on Delivery
+•	Weeks 1–8 (automata and formal languages) carry the heaviest proof-writing load for students meeting formal proofs for the first time. Budget extra worked examples here rather than in later weeks.
+•	The pumping lemma (weeks 5 and 8) is consistently the point where students disengage if the proof structure is not made explicit step by step. Present it as a fixed template: assume regularity, pick a string, apply the pumping condition, derive a contradiction.
+•	Diagonalization (week 12) benefits from a direct link back to the halting problem proof rather than introducing it as an abstract technique first.
+•	The term project (announced by week 9) can be a short paper reducing one problem to another not covered in lecture, or an implementation of a Turing machine simulator.
+Prerequisites
+Discrete mathematics covering sets, relations, functions, induction, and basic proof techniques. Familiarity with asymptotic notation is useful for the complexity unit but can be reviewed in week 13 if needed.

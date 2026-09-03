@@ -1,0 +1,45 @@
+# ==============================================================================
+# CS 305: Theory of Computation — Git Ignore Policy
+# ==============================================================================
+
+# 1. ACADEMIC INTEGRITY: STRICT EXCLUSION OF SOLUTIONS & ANSWER KEYS
+# Do NOT commit homework solutions, practice solutions, or instructor manuals!
+*solution*
+*Solution*
+*solutions*
+*Solutions*
+assignments/Problem_Set_Solutions.*
+practice_problems_and_solutions.md
+sipser-computation-3rd-solutions/
+
+# 2. COPYRIGHTED THIRD-PARTY TEXTBOOKS (Prevent DMCA takedowns)
+Introduction to the Theory of Computation*.pdf
+*Sipser*.pdf
+*.pdf.download
+
+# 3. LaTeX AUXILIARY & TEMPORARY BUILD FILES
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+*.bbl
+*.blg
+*.run.xml
+*.bcf
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# 4. OS & IDE ARTIFACTS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.vscode/
+.idea/
+*.swp
+*~

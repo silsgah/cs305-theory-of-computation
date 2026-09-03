@@ -1,0 +1,98 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.7in,top=0.75in,bottom=0.75in]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=gimpanavy,urlcolor=gimpanavy]{hyperref}
+
+\definecolor{gimpanavy}{RGB}{0, 43, 73}
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}
+\definecolor{gimpalight}{RGB}{245, 247, 251}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{GIMPA} $|$ CS 305 Theory of Computation}
+\lhead{\small\textbf{Problem Set 2 (Weeks 4--7)}}
+\rfoot{\small Page \thepage}
+\lfoot{\small Due: Week 6 Friday 11:59 PM}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{gimpanavy}GHANA INSTITUTE OF MANAGEMENT AND PUBLIC ADMINISTRATION}}\\
+    {\large \textbf{\color{gimpaaccent}School of Technology $|$ Department of Computer Science}}\\
+    \vspace{4pt}
+    \hrule height 1.2pt \color{gimpanavy}
+    \vspace{6pt}
+    {\LARGE \textbf{\color{gimpanavy}CS 305: Problem Set 2 (Grammars \& Non-Regular Languages)}}\\
+    {\large \textbf{Weeks 4--7 $|$ Total Marks: 100 $|$ Weight: 7.5\% of Final Grade}}
+\end{center}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[colback=gimpalight, colframe=gimpanavy, title=\textbf{Instructions \& Guidelines}]
+\begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+    \item Pumping Lemma proofs must follow the step-by-step adversarial template presented in lecture.
+    \item CFG derivations must state all variable substitution rules explicitly.
+    \item Pushdown Automata transitions must specify stack read/write operations (e.g., $a, b \to c$).
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\section*{Problem 1: Pumping Lemma Proofs for Regular Languages (25 Marks)}
+Using the **Pumping Lemma for Regular Languages** (Sipser Theorem 1.70), rigorously prove that the following languages are **not regular**:
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item $L_1 = \{0^n 1^m 0^n \mid n, m \ge 0\}$. (12 Marks)
+    \item $L_2 = \{w w \mid w \in \{a, b\}^*\}$. (13 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 2: Context-Free Grammar Design \& Ambiguity (25 Marks)}
+Let $\Sigma = \{a, b\}$.
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Construct a Context-Free Grammar $G$ that generates the language $L_3 = \{a^i b^j \mid i \neq j \text{ and } i, j \ge 0\}$. (12 Marks)
+    \item Consider the arithmetic grammar $G_{\text{expr}}$ with rules: $E \to E + E \mid E \times E \mid (E) \mid a$.
+    \begin{enumerate}[label=\textbf{(\roman*)}]
+        \item Prove that $G_{\text{expr}}$ is **ambiguous** by providing two distinct leftmost derivations (or two distinct parse trees) for the string $s = a + a \times a$. (7 Marks)
+        \item Rewrite $G_{\text{expr}}$ into an equivalent unambiguous grammar enforcing standard operator precedence ($\times$ over $+$). (6 Marks)
+    \end{enumerate}
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 3: Pushdown Automata (PDA) Construction (25 Marks)}
+Let $\Sigma = \{0, 1\}$. Design a formal Pushdown Automaton $M = (Q, \Sigma, \Gamma, \delta, q_0, F)$ that recognizes the language:
+$$L_4 = \{w \in \{0, 1\}^* \mid w \text{ has equal number of } 0\text{'s and } 1\text{'s}\}$$
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item State the formal components $(Q, \Sigma, \Gamma, q_0, F)$. (10 Marks)
+    \item Draw the complete PDA state diagram labeling all transition inputs and stack actions $a, b \to c$. (15 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 4: Modern Applied Case Study --- Grammar-Guided LLM JSON Decoding (25 Marks)}
+Modern generative AI inference frameworks (e.g., HuggingFace \texttt{outlines}, Microsoft \texttt{guidance}) force LLMs to output syntactically valid JSON objects by intersecting vocabulary token logits with a Context-Free Grammar mask at runtime.
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Write a simple CFG $G_{\text{JSON}}$ over terminal alphabet $\Sigma = \{\texttt{\{}, \texttt{\}}, \texttt{key}, \texttt{:}, \texttt{val}, \texttt{,}\}$ generating key-value JSON objects with arbitrary nesting depth. (12 Marks)
+    \item Explain why a finite state machine (DFA) cannot validate arbitrary recursive JSON nesting depth, and how a pushdown parser mask guarantees that the LLM will never produce a malformed JSON syntax error. (13 Marks)
+\end{enumerate}
+
+\vfill
+\begin{center}
+    \small\color{darkgray}
+    \textit{CS 305 Theory of Computation --- Ghana Institute of Management and Public Administration (GIMPA)}
+\end{center}
+
+\end{document}

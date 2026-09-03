@@ -1,0 +1,245 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.65in,top=0.7in,bottom=0.7in]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{amsmath,amssymb}
+\usepackage[colorlinks=true,linkcolor=gimpanavy,urlcolor=gimpanavy]{hyperref}
+
+% --- Color Definitions ---
+\definecolor{gimpanavy}{RGB}{0, 43, 73}       % GIMPA Dark Navy
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}   % Professional Accent Blue
+\definecolor{gimpalight}{RGB}{245, 247, 251}   % Light Background
+\definecolor{gimpaheader}{RGB}{230, 238, 248}  % Header Background
+\definecolor{darkgray}{RGB}{50, 50, 50}
+
+% --- Typography & Styling ---
+\titleformat{\section}{\large\bfseries\color{gimpanavy}}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+
+\titleformat{\subsection}{\normalsize\bfseries\color{gimpaaccent}}{}{0em}{}
+\titlespacing*{\subsection}{0pt}{8pt}{3pt}
+
+% --- Header & Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\color{darkgray}\textbf{GIMPA} $|$ School of Technology}
+\lhead{\small\color{darkgray}\textbf{CS 305: Theory of Computation}}
+\rfoot{\small\color{darkgray}Page \thepage}
+\lfoot{\small\color{darkgray}Level 300 Undergraduate Course Outline (2026/2027)}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% --- Custom Box Style ---
+\tcbset{
+    colback=gimpalight,
+    colframe=gimpanavy,
+    fonttitle=\bfseries\color{white},
+    boxrule=0.8pt,
+    arc=3pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt
+}
+
+% Column alignment helpers
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\begin{document}
+
+% --- Header Block / Title ---
+\begin{center}
+    {\Large \textbf{\color{gimpanavy}GHANA INSTITUTE OF MANAGEMENT AND PUBLIC ADMINISTRATION}}\\
+    \vspace{2pt}
+    {\large \textbf{\color{gimpaaccent}School of Technology $|$ Department of Computer Science}}\\
+    \vspace{5pt}
+    \hrule height 1.2pt \color{gimpanavy}
+    \vspace{6pt}
+    {\LARGE \textbf{\color{gimpanavy}CS 305: Theory of Computation}}\\
+    \vspace{3pt}
+    {\large \textbf{Level 300 Undergraduate $|$ Syllabus, 15-Week Schedule \& Applied Modern Case Studies}}
+    \vspace{3pt}
+\end{center}
+
+% --- Course Quick Info Box ---
+\begin{tcolorbox}[title=Course Specifications]
+\begin{tabularx}{\linewidth}{@{} l X l X @{}}
+    \textbf{Course Title:}   & Theory of Computation & \textbf{Academic Level:} & Level 300 (BSc CS / IT) \\
+    \textbf{Course Code:}    & CS 305 / SOT 305      & \textbf{Primary Text:}   & Michael Sipser (3rd Ed.) \\
+    \textbf{Course Credit:}  & 3 Credit Hours        & \textbf{Prerequisites:}  & Discrete Mathematics \\
+    \textbf{Office Hours:}   & By Appointment        & \textbf{Target Term:}    & Semester / Trimester Delivery
+\end{tabularx}
+\end{tcolorbox}
+
+\vspace{-2pt}
+
+% --- Course Description ---
+\section*{1. Course Overview \& Modern Relevance}
+What can a computer solve, and what are the fundamental, unbreakable mathematical limits of computation? **CS 305: Theory of Computation** is the foundational bedrock of computer science. It establishes formal mathematical abstractions of computing machines to answer two grand questions: \textit{What is computable? (Computability Theory)} and \textit{What is computable efficiently in polynomial time? (Complexity Theory)}.
+
+Rather than treating theory as isolated historical mathematics, this course deliberately bridges classical foundational theorems (by Turing, Chomsky, and Cook) to **modern 2026 computer science systems**:
+\begin{enumerate}[label=\textbf{(\alph*)}, leftmargin=1.8em, itemsep=1pt, topsep=2pt]
+    \item \textbf{Automata \& Formal Languages}: Finite state machines, regular expressions, context-free grammars, and pushdown automata --- with direct applications to **compiler lexical scanning**, **network intrusion detection (Snort/Zeek)**, and **LLM structured JSON generation (grammar-guided decoding)**.
+    \item \textbf{Computability Theory}: Turing machines, the Church--Turing thesis, decidability, the Halting Problem, and Rice's Theorem --- with direct applications to **Ethereum smart contract gas mechanics**, **impossibility of infallible anti-virus engines**, and **Chain-of-Thought in Large Language Models**.
+    \item \textbf{Complexity Theory}: Time complexity, classes $\mathbf{P}$ vs. $\mathbf{NP}$, and polynomial-time reductions --- with direct applications to **modern cryptography (RSA, Elliptic Curves, Post-Quantum Lattices)** and **industrial SAT/SMT solvers (Z3)**.
+\end{enumerate}
+
+% --- Prerequisites ---
+\section*{2. Prerequisites}
+\begin{tcolorbox}[colback=white, colframe=gimpaaccent, title=Required Background Knowledge]
+\textbf{Discrete Mathematics (CS 201)}: A solid foundation in set theory, binary relations, functions, mathematical induction, and basic proof techniques (direct proof, proof by contradiction, contraposition). 
+\end{tcolorbox}
+
+% --- Primary Text & Tools ---
+\section*{3. Prescribed Textbooks \& Software Tools}
+\begin{itemize}[label=\small$\blacksquare$, leftmargin=1.2em, itemsep=2pt]
+    \item \textbf{Primary Textbook:} \textbf{Michael Sipser}, \textit{Introduction to the Theory of Computation}, 3rd International Edition, Cengage Learning. (The global gold standard used at Stanford, MIT, and UC Berkeley).
+    \item \textbf{Interactive Simulators:} \textbf{JFLAP} (\url{www.jflap.org}) and \textbf{Automaton Simulator} (\url{automatonsimulator.com}) for visual DFA/NFA/PDA and Turing Machine execution.
+    \item \textbf{Programming Languages for Labs:} Python 3.10+ (for automata simulation and SAT reductions).
+\end{itemize}
+
+% --- Learning Outcomes ---
+\section*{4. Course Learning Outcomes (CLOs)}
+By the end of this course, Level 300 students will be able to:
+\begin{itemize}[label=\color{gimpaaccent}$\checkmark$, leftmargin=1.5em, itemsep=2.5pt]
+    \item \textbf{CLO 1:} Formally construct, trace, and minimize Deterministic and Nondeterministic Finite Automata (DFAs/NFAs), Regular Expressions, and Context-Free Grammars (CFGs).
+    \item \textbf{CLO 2:} Apply the Pumping Lemma to rigorously prove non-regularity and non-context-freeness of formal languages.
+    \item \textbf{CLO 3:} Design Turing Machines, trace configuration histories, and explain the Church--Turing Thesis.
+    \item \textbf{CLO 4:} Formulate undecidability proofs using Cantor's diagonalization argument and formal mapping reductions ($\le_{\text{m}}$).
+    \item \textbf{CLO 5:} Classify computational problems into time complexity classes ($\mathbf{P}$ and $\mathbf{NP}$) and prove $\mathbf{NP}$-completeness via polynomial-time reductions ($\le_{\text{P}}$).
+    \item \textbf{CLO 6:} Connect theoretical computability and complexity limits to modern computer systems, including LLM grammar-constrained decoding, smart contract execution models, cybersecurity verification limits, and public-key cryptography.
+\end{itemize}
+
+\newpage
+
+% --- Assessment Breakdown ---
+\section*{5. Assessment Breakdown}
+Evaluation combines continuous biweekly problem sets, short quizzes, mid-semester assessment, an independent applied term project, and a comprehensive final exam:
+
+\vspace{4pt}
+\begin{center}
+\rowcolors{2}{gimpalight}{white}
+\begin{tabularx}{\textwidth}{X L{6.0cm} C{2.5cm}}
+    \toprule
+    \textbf{Assessment Component} & \textbf{Format \& Frequency} & \textbf{Weight (\%)} \\
+    \midrule
+    \textbf{Problem Sets} & 4 biweekly homework sets (7.5\% each) & \textbf{30\%} \\
+    \textbf{Quizzes} & 2 short in-class diagnostic quizzes (5\% each) & \textbf{10\%} \\
+    \textbf{Midterm Examination} & 1 written mid-trimester exam (Week 8) & \textbf{20\%} \\
+    \textbf{Term Project / Demo} & Independent reduction paper or visual TM simulator & \textbf{10\%} \\
+    \textbf{Final Examination} & Comprehensive end-of-trimester exam & \textbf{30\%} \\
+    \bottomrule
+    \textbf{Total} & & \textbf{100\%} \\
+    \bottomrule
+\end{tabularx}
+\end{center}
+
+% --- Weekly Schedule with Modern Spotlights ---
+\section*{6. 15-Week Detailed Schedule \& Modern Technology Spotlights}
+
+{\small
+\rowcolors{2}{white}{gimpalight}
+\begin{longtable}{@{} C{0.6cm} L{3.5cm} C{1.3cm} L{5.2cm} L{3.6cm} @{}}
+    \hline
+    \rowcolor{gimpanavy}
+    \color{white}\textbf{Wk} & \color{white}\textbf{Topic \& Content} & \color{white}\textbf{Sipser} & \color{white}\textbf{Modern Spotlight \& Applied Case Study} & \color{white}\textbf{Milestones} \\
+    \hline
+    \endhead
+
+    1 & \textbf{Preliminaries \& Computation Models}\newline Alphabets, strings, formal languages, proof techniques & Ch.~0 & \textbf{Chomsky Hierarchy in Modern AI:}\newline Why finite models cannot parse recursive language; LLM tokenization alphabets & Diagnostic Math Review \\
+
+    2 & \textbf{Deterministic Finite Automata}\newline DFA 5-tuple, state diagrams, formal language acceptance & 1.1 & \textbf{Network Packet Filtering \& Compilers:}\newline How Snort/Zeek firewalls and compiler lexers scan millions of tokens in $\mathcal{O}(n)$ time & \textbf{Problem Set 1 Assigned} \\
+
+    3 & \textbf{Nondeterministic Finite Automata}\newline NFA definition, non-determinism, DFA/NFA equivalence & 1.2 & \textbf{NFA State Explosion in Search Engines:}\newline How grep and search indexing simulate multiple hypotheses simultaneously & \textbf{Problem Set 1 Due} \\
+
+    4 & \textbf{Regular Expressions \& GNFA}\newline Regular operations, equivalence with finite automata & 1.3 & \textbf{Catastrophic ReDoS Cloud Outages:}\newline How exponential backtracking in non-DFA regex engines crashed Cloudflare in 2019 & \textbf{Quiz 1} \\
+
+    5 & \textbf{Nonregular Languages}\newline Limits of finite automata; Pumping Lemma for regular languages & 1.4 & \textbf{Memory Bounds of Finite State Systems:}\newline Why a DFA can count to 1 billion but cannot verify arbitrary matched brackets & \textbf{Problem Set 2 Assigned} \\
+
+    6 & \textbf{Context-Free Grammars}\newline CFG definitions, derivations, parse trees, ambiguity & 2.1 & \textbf{Grammar-Guided LLM JSON Generation:}\newline How APIs (Outlines/Guidance) force LLMs to output valid JSON/SQL via CFG masks & \textbf{Problem Set 2 Due} \\
+
+    7 & \textbf{Pushdown Automata}\newline PDA definition, stack memory, equivalence of PDAs and CFGs & 2.2 & \textbf{Compiler ASTs \& Runtime Call Stacks:}\newline Why stack memory is strictly required for nested expressions and syntax trees & Midterm Review \\
+
+    8 & \textbf{Midterm Exam \& Non-CFLs}\newline Pumping Lemma for Context-Free Languages & 2.3 & \textbf{Transformer Limits on Dyck Languages:}\newline Why standard attention mechanisms struggle with deep recursive parentheses & \textbf{Midterm Examination} \\
+
+    9 & \textbf{Turing Machines}\newline Formal 7-tuple, tape head, configurations, TM variants & 3.1--3.2 & \textbf{Chain-of-Thought LLMs as Turing Machines:}\newline Why an autoregressive LLM with an external scratchpad tape becomes Turing-complete & \textbf{Problem Set 3 Assigned}\newline \textit{(Project Announced)} \\
+
+    10 & \textbf{Church--Turing Thesis}\newline Equivalence of TM variants; formal algorithm definition & 3.3 & \textbf{Physical Limits of Computation:}\newline Quantum computers, biological computing, and why no physical machine exceeds the TM & \textbf{Problem Set 3 Due} \\
+
+    11 & \textbf{Decidability}\newline Decidable languages, decision procedures for regular/CFL problems & 4.1 & \textbf{Automated Software Verification:}\newline How static analysis tools prove memory safety and deadlock freedom in critical software & \textbf{Quiz 2} \\
+
+    12 & \textbf{Undecidability \& Halting Problem}\newline $A_{\text{TM}}$, Cantor's diagonalization, mapping reductions, Rice's theorem & 4.2, 5.1 & \textbf{Smart Contract Gas \& Anti-Virus Limits:}\newline (1) Why Ethereum charges Gas (Halting Problem);\newline (2) Why an infallible anti-virus is impossible (Rice) & \textbf{Problem Set 4 Assigned} \\
+
+    13 & \textbf{Time Complexity \& Class P}\newline Measuring time complexity, asymptotic bounds, class $\mathbf{P}$ & 7.1--7.2 & \textbf{Polynomial vs Exponential in Production:}\newline Why $\mathcal{O}(n^k)$ algorithms scale to global web scale while $\mathcal{O}(2^n)$ algorithms stall & \textbf{Problem Set 4 Due} \\
+
+    14 & \textbf{Class NP \& NP-Completeness}\newline Class $\mathbf{NP}$, Cook--Levin theorem, 3SAT, CLIQUE reductions & 7.3--7.4 & \textbf{Post-Quantum Cryptography \& SAT Solvers:}\newline How industrial solvers (Z3) solve 1M-variable NP-hard problems; RSA \& Lattice crypto & \textbf{Term Project Demos} \\
+
+    15 & \textbf{Course Synthesis \& Quantum Teaser}\newline $\mathbf{P}$ vs $\mathbf{NP}$ Millennium Prize; intro to quantum class $\mathbf{BQP}$ & Review & \textbf{The Future of Computation:}\newline Shor's algorithm, quantum supremacy, and open frontiers in theoretical computer science & \textbf{Final Examination} \\
+    \hline
+\end{longtable}
+}
+
+% --- Pedagogical Delivery Notes ---
+\section*{7. Pedagogical \& Proof-Writing Guidance for Students}
+
+\begin{tcolorbox}[title=Mastering Theoretical Proofs]
+\begin{itemize}[label=\small$\rightarrow$, leftmargin=1.2em, itemsep=4pt]
+    \item \textbf{The Pumping Lemma Strategy (Weeks 5 \& 8):} Frame the Pumping Lemma as an adversarial game between you and an opponent:
+    \begin{center}
+        \small\textbf{Opponent gives $p$} $\longrightarrow$ \textbf{You choose $s \in L$ ($|s| \ge p$)} $\longrightarrow$ \textbf{Opponent splits $s=xyz$} $\longrightarrow$ \textbf{You pick $i$ such that $xy^iz \notin L$}
+    \end{center}
+
+    \item \textbf{Mapping Reductions ($\mathbf{A \le_{\text{m}} B}$):} To prove language $A$ is undecidable using known undecidable language $B$, remember the direction of reduction: \textbf{Reduce the known hard problem to the unknown problem} ($A_{\text{TM}} \le_{\text{m}} L$).
+
+    \item \textbf{Term Project Options (Due Week 14):}
+    \begin{enumerate}[label=(\alph*), leftmargin=1.5em]
+        \item \textit{Implementation Track:} Build an interactive visual simulator for DFAs/NFAs or a Multi-Tape Turing Machine in Python/JavaScript.
+        \item \textit{Applied Case Study Track:} Write a 5-page research paper analyzing a modern system through theoretical lenses (e.g., ReDoS analysis of popular npm libraries, or modeling smart contract execution limits).
+    \end{enumerate}
+\end{itemize}
+\end{tcolorbox}
+
+% --- Contemporary Research Literature ---
+\section*{8. Prescribed Contemporary Research Papers by Lecture Module}
+
+To bridge theoretical rigor with modern breakthroughs, students will read selected seminal and contemporary research papers from top computer science venues (\textbf{ICLR, NeurIPS, USENIX Security, ACM CCS, POPL, EMNLP}):
+
+\begin{enumerate}[label=\textbf{[\arabic*]}, leftmargin=2em, itemsep=3.5pt]
+    \item \textbf{Week 1 (Chomsky Hierarchy \& LLMs):} G.~Delétang, et al., \textit{``Neural Networks and the Chomsky Hierarchy,''} \textbf{International Conference on Learning Representations (ICLR 2023)}, Spotlight Paper.
+    
+    \item \textbf{Weeks 2--3 (DFAs in High-Speed Networks):} S.~Kumar, et al., \textit{``Algorithms to Accelerate Multiple Regular Expression Matching for Deep Packet Inspection,''} \textbf{ACM SIGCOMM Computer Communication Review}, 2006.
+    
+    \item \textbf{Week 4 (Catastrophic ReDoS Cloud Attacks):} C.-A.~Staicu and M.~Pradel, \textit{``Freezing the Web: A Study of ReDoS Vulnerabilities in JavaScript-based Web Servers,''} \textbf{USENIX Security Symposium}, 2018.
+    
+    \item \textbf{Week 6 (CFGs \& Structured LLM Generation):} B.~T.~Willard and R.~Louf, \textit{``Efficient Guided Generation for Large Language Models,''} \textbf{NeurIPS Foundation Models Workshop}, 2023.
+    
+    \item \textbf{Week 8 (Dyck Languages \& Attention Limits):} M.~Hahn, \textit{``Theoretical Limitations of Self-Attention in Neural Sequence Models,''} \textbf{Transactions of the Association for Computational Linguistics (TACL)}, 2020.
+    
+    \item \textbf{Week 9 (Turing Completeness of Chain-of-Thought):} W.~Merrill and A.~Sabharwal, \textit{``The Expressive Power of Transformers with Chain of Thought,''} \textbf{International Conference on Learning Representations (ICLR 2024)}.
+    
+    \item \textbf{Week 12 (Undecidability \& Smart Contract Security):} L.~Luu, et al., \textit{``Making Smart Contracts Smarter,''} \textbf{ACM Conference on Computer and Communications Security (CCS)}, 2016.
+    
+    \item \textbf{Week 12 (Rice's Theorem \& Malware Limits):} F.~Cohen, \textit{``Computer Viruses: Theory and Experiments,''} \textbf{Computers \& Security}, 1987.
+    
+    \item \textbf{Week 14 (Automated SAT Solvers in Industry):} L.~de Moura and N.~Bj{\o}rner, \textit{``Z3: An Efficient SMT Solver,''} \textbf{International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS / Springer LNCS)}, 2008.
+    
+    \item \textbf{Week 15 (Post-Quantum Cryptography):} E.~Alkim, et al., \textit{``Post-Quantum Key Exchange: A New Hope,''} \textbf{USENIX Security Symposium}, 2016.
+\end{enumerate}
+
+\vfill
+\begin{center}
+    \small\color{darkgray}
+    \textit{Ghana Institute of Management and Public Administration (GIMPA) --- Department of Computer Science}
+\end{center}
+
+\end{document}

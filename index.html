@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CS 305: Theory of Computation at GIMPA School of Technology. Comprehensive 15-week course outline, lecture slides, assignments, lab manual, and modern systems case studies.">
+  <meta name="keywords" content="Theory of Computation, GIMPA, Computer Science, Automata, Turing Machines, Complexity, Sipser, CS 305">
+  <meta name="author" content="GIMPA School of Technology - Department of Computer Science">
+  <title>CS 305: Theory of Computation | GIMPA School of Technology</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- MathJax for crystal-clear mathematical formulas -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+
+  <!-- Top Sticky Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="nav-container">
+      <a href="#" class="brand-logo" id="brand-logo">
+        <div class="brand-crest">
+          <span class="crest-symbol">∑</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">CS 305</span>
+          <span class="brand-sub">GIMPA Technology</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" id="main-nav">
+        <a href="#overview" class="nav-link">Overview</a>
+        <a href="#schedule" class="nav-link">15-Week Schedule</a>
+        <a href="#materials" class="nav-link">Materials Hub</a>
+        <a href="#spotlights" class="nav-link">Modern Spotlights</a>
+        <a href="#simulators" class="nav-link">Simulators</a>
+        <a href="#grading" class="nav-link">Grading</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="computationTheory.pdf" target="_blank" class="btn btn-outline btn-sm" id="btn-syllabus-pdf" download>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="12" y2="18"/><line x1="15" y1="15" x2="12" y2="18"/></svg>
+          Syllabus PDF
+        </a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-container">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Ghana Institute of Management and Public Administration (GIMPA)
+      </div>
+      <h1 class="hero-title">
+        CS 305: Theory of Computation
+      </h1>
+      <p class="hero-subtitle">
+        Bridging the foundational limits of mathematical automata with modern computer science: 
+        from <span class="highlight">LLM grammar-guided decoding</span> and <span class="highlight">ReDoS cloud outages</span> 
+        to <span class="highlight">Ethereum gas bounds</span> and <span class="highlight">post-quantum SAT verification</span>.
+      </p>
+
+      <!-- Key Metadata Grid -->
+      <div class="meta-card-grid">
+        <div class="meta-pill">
+          <div class="meta-icon">🎓</div>
+          <div>
+            <div class="meta-label">Academic Level</div>
+            <div class="meta-val">Level 300 (BSc CS / IT)</div>
+          </div>
+        </div>
+        <div class="meta-pill">
+          <div class="meta-icon">📖</div>
+          <div>
+            <div class="meta-label">Core Textbook</div>
+            <div class="meta-val">Michael Sipser (3rd Ed.)</div>
+          </div>
+        </div>
+        <div class="meta-pill">
+          <div class="meta-icon">⏳</div>
+          <div>
+            <div class="meta-label">Credit & Duration</div>
+            <div class="meta-val">3 Credits · 15 Weeks</div>
+          </div>
+        </div>
+        <div class="meta-pill">
+          <div class="meta-icon">🔬</div>
+          <div>
+            <div class="meta-label">Prerequisite</div>
+            <div class="meta-val">Discrete Math (CS 201)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-cta-group">
+        <a href="#schedule" class="btn btn-primary" id="cta-schedule">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Explore 15-Week Schedule
+        </a>
+        <a href="#materials" class="btn btn-secondary" id="cta-materials">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Lecture Slides & Problem Sets
+        </a>
+        <a href="#simulators" class="btn btn-outline" id="cta-simulators">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Interactive Lab Simulators
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Pillars / Overview Section -->
+  <section class="section overview-section" id="overview">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Conceptual Framework</span>
+        <h2 class="section-title">The Three Pillars of Computation</h2>
+        <p class="section-desc">
+          What can computers compute, what are their unbreakable physical limits, and what can be computed within practical time bounds?
+        </p>
+      </div>
+
+      <div class="pillars-grid">
+        <!-- Pillar 1 -->
+        <div class="pillar-card card">
+          <div class="pillar-header">
+            <span class="pillar-num">01</span>
+            <div class="pillar-icon-box cyan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><line x1="8.7" y1="10.7" x2="15.3" y2="7.3"/><line x1="8.7" y1="13.3" x2="15.3" y2="16.7"/></svg>
+            </div>
+          </div>
+          <h3 class="pillar-title">Automata & Formal Languages</h3>
+          <p class="pillar-text">
+            Deterministic and nondeterministic finite automata (DFAs/NFAs), regular expressions, context-free grammars (CFGs), pushdown automata (PDAs), and the Pumping Lemma.
+          </p>
+          <div class="pillar-spotlight">
+            <span class="spotlight-badge">Modern Application</span>
+            <p><strong>Compiler Lexers & LLM JSON Decoding:</strong> How Outlines and Guidance enforce guaranteed JSON schemas by masking next-token logits with finite-state and CFG transitions.</p>
+          </div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="pillar-card card">
+          <div class="pillar-header">
+            <span class="pillar-num">02</span>
+            <div class="pillar-icon-box purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+          </div>
+          <h3 class="pillar-title">Computability Theory</h3>
+          <p class="pillar-text">
+            The Turing Machine model, Church–Turing thesis, decidability, Cantor's diagonalization, the Halting Problem, mapping reductions (\(\le_{\mathrm{m}}\)), and Rice's Theorem.
+          </p>
+          <div class="pillar-spotlight">
+            <span class="spotlight-badge">Modern Application</span>
+            <p><strong>Ethereum Gas & Antivirus Limits:</strong> Why smart contracts require execution metering (solving the Halting Problem) and why infallible static anti-malware is mathematically impossible.</p>
+          </div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="pillar-card card">
+          <div class="pillar-header">
+            <span class="pillar-num">03</span>
+            <div class="pillar-icon-box amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+          </div>
+          <h3 class="pillar-title">Complexity Theory</h3>
+          <p class="pillar-text">
+            Asymptotic time/space complexity, classes \(\mathbf{P}\) and \(\mathbf{NP}\), polynomial-time verifiers, Cook–Levin Theorem, 3SAT reductions, and \(\mathbf{NP}\)-completeness.
+          </p>
+          <div class="pillar-spotlight">
+            <span class="spotlight-badge">Modern Application</span>
+            <p><strong>Post-Quantum Crypto & SMT Solvers:</strong> How industrial Z3 solvers verify million-variable boolean systems and why \(\mathbf{NP}\)-hardness underpins modern asymmetric encryption.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15-Week Detailed Schedule Section -->
+  <section class="section schedule-section" id="schedule">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interactive Syllabus</span>
+        <h2 class="section-title">15-Week Comprehensive Schedule</h2>
+        <p class="section-desc">
+          Browse week-by-week lectures, Sipser textbook chapters, required deliverables, and applied computer science spotlights.
+        </p>
+      </div>
+
+      <!-- Controls: Filter & Search -->
+      <div class="schedule-controls">
+        <div class="filter-pills" id="filter-pills">
+          <button class="filter-btn active" data-filter="all">All Weeks (1–15)</button>
+          <button class="filter-btn" data-filter="automata">Part 1: Automata (Wk 1–8)</button>
+          <button class="filter-btn" data-filter="computability">Part 2: Computability (Wk 9–12)</button>
+          <button class="filter-btn" data-filter="complexity">Part 3: Complexity (Wk 13–15)</button>
+        </div>
+
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="schedule-search" placeholder="Search topics, Sipser chapters, case studies..." aria-label="Search schedule">
+        </div>
+      </div>
+
+      <!-- Timeline Cards Container -->
+      <div class="timeline-container" id="timeline-cards">
+        <!-- Injected dynamically via app.js for fast filtering & search -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Downloadable Course Materials Hub -->
+  <section class="section materials-section" id="materials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Official Course Downloads</span>
+        <h2 class="section-title">Lecture Slides & Problem Sets</h2>
+        <p class="section-desc">
+          Official course PDFs compiled with \(\mathrm{\LaTeX}\) and Beamer. Student problem sets are clean without solution keys.
+        </p>
+      </div>
+
+      <div class="materials-grid">
+        <!-- Lecture Slides Group -->
+        <div class="material-col">
+          <div class="col-header">
+            <svg class="col-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <h3>Lecture Slide Decks (Beamer)</h3>
+          </div>
+          
+          <div class="download-list">
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge cyan">Module 1</span>
+                <span class="item-name">Automata and Formal Languages</span>
+                <span class="item-desc">DFAs, NFAs, Regex, Equivalence & Pumping Lemma</span>
+              </div>
+              <a href="slides/Module1_Automata_and_Formal_Languages.pdf" class="btn btn-sm btn-outline" download>
+                PDF (409 KB)
+              </a>
+            </div>
+
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge cyan">Module 2</span>
+                <span class="item-name">Context-Free Languages & Parsing</span>
+                <span class="item-desc">CFGs, Pushdown Automata, CNF & CFL Pumping Lemma</span>
+              </div>
+              <a href="slides/Module2_Context_Free_Languages_and_Parsing.pdf" class="btn btn-sm btn-outline" download>
+                PDF (262 KB)
+              </a>
+            </div>
+
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge purple">Module 3</span>
+                <span class="item-name">Turing Machines & Undecidability</span>
+                <span class="item-desc">Church–Turing Thesis, Halting Problem & Reductions</span>
+              </div>
+              <a href="slides/Module3_Turing_Machines_and_Undecidability.pdf" class="btn btn-sm btn-outline" download>
+                PDF (306 KB)
+              </a>
+            </div>
+
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge amber">Module 4</span>
+                <span class="item-name">Computational Complexity & NP</span>
+                <span class="item-desc">Time Classes P, NP, Cook–Levin & NP-Completeness</span>
+              </div>
+              <a href="slides/Module4_Computational_Complexity_and_NP.pdf" class="btn btn-sm btn-outline" download>
+                PDF (346 KB)
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assignments & Labs Group -->
+        <div class="material-col">
+          <div class="col-header">
+            <svg class="col-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <h3>Homework Problem Sets & Lab Manuals</h3>
+          </div>
+
+          <div class="download-list">
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge green">HW 1</span>
+                <span class="item-name">Problem Set 1 (Regular Languages)</span>
+                <span class="item-desc">Due Week 3 · DFA/NFA designs & Subset Construction</span>
+              </div>
+              <a href="assignments/Problem_Set_1.pdf" class="btn btn-sm btn-outline" download>
+                PDF (188 KB)
+              </a>
+            </div>
+
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge green">HW 2</span>
+                <span class="item-name">Problem Set 2 (CFLs & Grammars)</span>
+                <span class="item-desc">Due Week 6 · CFG ambiguity, CNF & PDA transitions</span>
+              </div>
+              <a href="assignments/Problem_Set_2.pdf" class="btn btn-sm btn-outline" download>
+                PDF (190 KB)
+              </a>
+            </div>
+
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge green">HW 3</span>
+                <span class="item-name">Problem Set 3 (Turing Machines)</span>
+                <span class="item-desc">Due Week 10 · TM formal descriptions & configurations</span>
+              </div>
+              <a href="assignments/Problem_Set_3.pdf" class="btn btn-sm btn-outline" download>
+                PDF (181 KB)
+              </a>
+            </div>
+
+            <div class="download-item">
+              <div class="item-info">
+                <span class="item-badge green">HW 4</span>
+                <span class="item-name">Problem Set 4 (Decidability & NP)</span>
+                <span class="item-desc">Due Week 13 · Mapping reductions & 3SAT reductions</span>
+              </div>
+              <a href="assignments/Problem_Set_4.pdf" class="btn btn-sm btn-outline" download>
+                PDF (173 KB)
+              </a>
+            </div>
+
+            <div class="download-item highlight-item">
+              <div class="item-info">
+                <span class="item-badge blue">Lab Guide</span>
+                <span class="item-name">Automaton Simulator Lab Manual</span>
+                <span class="item-desc">Step-by-step visual automaton & TM tracing manual</span>
+              </div>
+              <a href="Automaton_Simulator_Lab_Manual.pdf" class="btn btn-sm btn-primary" download>
+                PDF (227 KB)
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proof Writing Guide: Adversarial Game Strategy -->
+  <section class="section proof-section" id="proof-guide">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Proof Mastery</span>
+        <h2 class="section-title">The Pumping Lemma as an Adversarial Game</h2>
+        <p class="section-desc">
+          How to write flawless proofs of non-regularity and non-context-freeness without falling into logical quantifier traps.
+        </p>
+      </div>
+
+      <div class="game-steps-grid">
+        <div class="game-step-card">
+          <div class="step-num">Step 1</div>
+          <div class="step-actor opponent">Opponent's Move</div>
+          <h4>The Opponent Picks \(p\)</h4>
+          <p>The adversary chooses an arbitrary pumping length \(p \ge 1\). You do not know \(p\), so you must treat it as a fixed positive constant.</p>
+        </div>
+
+        <div class="game-step-card">
+          <div class="step-num">Step 2</div>
+          <div class="step-actor you">Your Move</div>
+          <h4>You Choose String \(s \in L\)</h4>
+          <p>You select a specific, strategically chosen string \(s\) whose length \(|s| \ge p\) (e.g., \(s = 0^p 1^p\)). It must depend on \(p\).</p>
+        </div>
+
+        <div class="game-step-card">
+          <div class="step-num">Step 3</div>
+          <div class="step-actor opponent">Opponent's Move</div>
+          <h4>Opponent Splits \(s = xyz\)</h4>
+          <p>The adversary partitions \(s\) subject to \(|y| > 0\) and \(|xy| \le p\). You must analyze <em>all</em> possible decompositions.</p>
+        </div>
+
+        <div class="game-step-card highlight">
+          <div class="step-num">Step 4</div>
+          <div class="step-actor you">Your Winning Move</div>
+          <h4>You Choose Pump Power \(i\)</h4>
+          <p>You choose an exponent \(i \ge 0\) (e.g., \(i = 0\) or \(i = 2\)) such that the pumped string \(xy^i z \notin L\). Contradiction achieved!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Simulators Section -->
+  <section class="section simulators-section" id="simulators">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Hands-On Labs</span>
+        <h2 class="section-title">Interactive Automata & TM Simulators</h2>
+        <p class="section-desc">
+          Verify and trace state transitions, non-deterministic branches, stack memory, and Turing machine tape movements visually.
+        </p>
+      </div>
+
+      <div class="simulators-grid">
+        <div class="sim-card card">
+          <div class="sim-icon">🌐</div>
+          <h3>Automaton Simulator</h3>
+          <p>Browser-based visual finite automaton and Turing machine simulator. Create states, transitions, and step through input strings directly in the canvas.</p>
+          <div class="sim-meta">Supported: DFA, NFA, PDA, Turing Machine</div>
+          <a href="https://automatonsimulator.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+            Launch automatonsimulator.com &rarr;
+          </a>
+        </div>
+
+        <div class="sim-card card">
+          <div class="sim-icon">☕</div>
+          <h3>JFLAP Visual Workbench</h3>
+          <p>The classic Duke University formal languages tool. Converts regular expressions to NFAs, runs subset construction, and simulates multi-tape Turing machines.</p>
+          <div class="sim-meta">Desktop Java app · Comprehensive algorithms</div>
+          <a href="https://www.jflap.org" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+            Visit JFLAP.org &rarr;
+          </a>
+        </div>
+
+        <div class="sim-card card">
+          <div class="sim-icon">🐍</div>
+          <h3>Python Automata-Lib</h3>
+          <p>Programmatic verification library for Python 3.10+. Test language membership, compute DFA intersections, and minimize automata in automated scripts.</p>
+          <div class="sim-meta">Terminal: <code>pip install automata-lib</code></div>
+          <a href="https://github.com/caleb531/automata" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+            View on GitHub &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grading & Assessment Breakdown -->
+  <section class="section grading-section" id="grading">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Evaluation</span>
+        <h2 class="section-title">Assessment Breakdown & Academic Integrity</h2>
+        <p class="section-desc">
+          Rigorous continuous assessment combining homework, quizzes, hands-on lab projects, and formal examinations.
+        </p>
+      </div>
+
+      <div class="grading-cards-grid">
+        <div class="grade-card card">
+          <div class="grade-percent">30%</div>
+          <div class="grade-title">Problem Sets (4)</div>
+          <p class="grade-desc">4 biweekly homework sets (7.5% each). Formal proofs, automaton designs, and complexity reductions.</p>
+        </div>
+
+        <div class="grade-card card">
+          <div class="grade-percent">10%</div>
+          <div class="grade-title">Diagnostic Quizzes</div>
+          <p class="grade-desc">2 short in-class quizzes (5% each) at Weeks 4 and 11 testing immediate conceptual definitions.</p>
+        </div>
+
+        <div class="grade-card card">
+          <div class="grade-percent">20%</div>
+          <div class="grade-title">Midterm Examination</div>
+          <p class="grade-desc">Week 8 comprehensive examination covering Regular Languages, NFAs, and Context-Free Grammars.</p>
+        </div>
+
+        <div class="grade-card card">
+          <div class="grade-percent">10%</div>
+          <div class="grade-title">Applied Term Project</div>
+          <p class="grade-desc">Independent visual TM simulation or modern case study reduction paper (demos in Week 14).</p>
+        </div>
+
+        <div class="grade-card card highlight">
+          <div class="grade-percent">30%</div>
+          <div class="grade-title">Final Examination</div>
+          <p class="grade-desc">Comprehensive end-of-semester exam covering the full breadth of computability and NP-completeness.</p>
+        </div>
+      </div>
+
+      <div class="integrity-notice">
+        <div class="notice-icon">⚠️</div>
+        <div class="notice-content">
+          <h4>Academic Integrity Policy on Generative AI</h4>
+          <p>
+            Students may use AI assistance for high-level conceptual questions and proof structure verification, but <strong>all submitted proofs, state transition tables, and reductions must represent the student's independent mathematical work</strong>. Direct copy-pasting of AI-generated answers or solution manuals violates GIMPA School of Technology academic integrity standards.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal for Case Studies -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-container" id="modal-container">
+      <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+      <div class="modal-header">
+        <span class="modal-tag" id="modal-tag">Modern Case Study</span>
+        <h3 class="modal-title" id="modal-title">Case Study Title</h3>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <div class="brand-crest small">∑</div>
+        <div>
+          <h4>CS 305: Theory of Computation</h4>
+          <p>Ghana Institute of Management and Public Administration (GIMPA)</p>
+          <p class="footer-dept">School of Technology · Department of Computer Science</p>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="#schedule">15-Week Schedule</a></li>
+          <li><a href="#materials">Lecture Slides & PDFs</a></li>
+          <li><a href="#simulators">Simulators Lab</a></li>
+          <li><a href="computationTheory.pdf" download>Course Syllabus (PDF)</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-info">
+        <h5>Reference Text</h5>
+        <p>Michael Sipser, <em>Introduction to the Theory of Computation</em>, 3rd International Edition, Cengage Learning.</p>
+        <p class="footer-copy">&copy; 2026 GIMPA School of Technology. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>

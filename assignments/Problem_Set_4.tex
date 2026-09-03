@@ -1,0 +1,96 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.7in,top=0.75in,bottom=0.75in]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=gimpanavy,urlcolor=gimpanavy]{hyperref}
+
+\definecolor{gimpanavy}{RGB}{0, 43, 73}
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}
+\definecolor{gimpalight}{RGB}{245, 247, 251}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{GIMPA} $|$ CS 305 Theory of Computation}
+\lhead{\small\textbf{Problem Set 4 (Weeks 12--14)}}
+\rfoot{\small Page \thepage}
+\lfoot{\small Due: Week 14 Friday 11:59 PM}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{gimpanavy}GHANA INSTITUTE OF MANAGEMENT AND PUBLIC ADMINISTRATION}}\\
+    {\large \textbf{\color{gimpaaccent}School of Technology $|$ Department of Computer Science}}\\
+    \vspace{4pt}
+    \hrule height 1.2pt \color{gimpanavy}
+    \vspace{6pt}
+    {\LARGE \textbf{\color{gimpanavy}CS 305: Problem Set 4 (Undecidability \& NP-Completeness)}}\\
+    {\large \textbf{Weeks 12--14 $|$ Total Marks: 100 $|$ Weight: 7.5\% of Final Grade}}
+\end{center}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[colback=gimpalight, colframe=gimpanavy, title=\textbf{Instructions \& Guidelines}]
+\begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+    \item Mapping reduction proofs ($A \le_{\text{m}} B$) must clearly define the computable reduction function $f$ and prove both directions ($w \in A \iff f(w) \in B$).
+    \item $\mathbf{NP}$-completeness proofs must prove both: (1) Membership in $\mathbf{NP}$, and (2) Polynomial-time reduction from a known $\mathbf{NP}$-complete problem.
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\section*{Problem 1: Undecidability via Mapping Reductions (25 Marks)}
+Let $E_{\text{TM}} = \{\langle M \rangle \mid M \text{ is a TM and } L(M) = \varnothing\}$.
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Prove that $E_{\text{TM}}$ is **undecidable** by showing a mapping reduction $A_{\text{TM}} \le_{\text{m}} \overline{E_{\text{TM}}}$ (or reduction from $A_{\text{TM}}$ to $E_{\text{TM}}$) (Sipser Theorem 5.2). (15 Marks)
+    \item Use your result to prove that $EQ_{\text{TM}} = \{\langle M_1, M_2 \rangle \mid L(M_1) = L(M_2)\}$ is also undecidable. (10 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 2: Rice's Theorem Applications (25 Marks)}
+\textbf{Rice's Theorem} states that any non-trivial semantic property of a Turing machine's language is undecidable.
+Using Rice's Theorem, determine (with rigorous justification) whether each of the following languages is decidable or undecidable:
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item $L_1 = \{\langle M \rangle \mid M \text{ is a TM and } L(M) \text{ contains the string } \texttt{101}\}$. (8 Marks)
+    \item $L_2 = \{\langle M \rangle \mid M \text{ is a TM and } L(M) \text{ is a context-free language}\}$. (8 Marks)
+    \item $L_3 = \{\langle M \rangle \mid M \text{ is a TM and } M \text{ has at most 5 states}\}$. (9 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 3: NP-Completeness Reduction: 3SAT to CLIQUE (25 Marks)}
+A **clique** in an undirected graph $G = (V, E)$ is a subset of vertices $V' \subseteq V$ such that every pair of distinct vertices in $V'$ is connected by an edge. Let:
+$$\text{CLIQUE} = \{\langle G, k \rangle \mid G \text{ is an undirected graph containing a clique of size } k\}$$
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Prove that $\text{CLIQUE} \in \mathbf{NP}$ by defining a polynomial-time verification algorithm. (8 Marks)
+    \item Given the 3CNF Boolean formula $\phi = (x_1 \lor \overline{x_2} \lor x_3) \land (\overline{x_1} \lor x_2 \lor x_3) \land (x_1 \lor x_2 \lor \overline{x_3})$, construct the exact graph $G_\phi$ and target integer $k$ according to the Cook-Karp 3SAT-to-CLIQUE reduction (Sipser Theorem 7.32). Draw the graph $G_\phi$. (10 Marks)
+    \item Prove that $\phi$ is satisfiable $\iff G_\phi$ contains a clique of size $k=3$. (7 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 4: Modern Applied Case Study --- Ethereum Smart Contract Gas (25 Marks)}
+The Ethereum Virtual Machine (EVM) executes Turing-complete bytecode submitted by untrusted network users.
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Prove why it is mathematically impossible for an Ethereum miner to statically pre-screen smart contracts to reject all transactions containing infinite loops before execution begins. (12 Marks)
+    \item Formulate how Ethereum's deterministic Gas metering mechanism solves the practical consequences of Turing's Halting Problem, guaranteeing bounded execution time for network consensus. (13 Marks)
+\end{enumerate}
+
+\vfill
+\begin{center}
+    \small\color{darkgray}
+    \textit{CS 305 Theory of Computation --- Ghana Institute of Management and Public Administration (GIMPA)}
+\end{center}
+
+\end{document}

@@ -1,0 +1,94 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.7in,top=0.75in,bottom=0.75in]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=gimpanavy,urlcolor=gimpanavy]{hyperref}
+
+\definecolor{gimpanavy}{RGB}{0, 43, 73}
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}
+\definecolor{gimpalight}{RGB}{245, 247, 251}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\textbf{GIMPA} $|$ CS 305 Theory of Computation}
+\lhead{\small\textbf{Problem Set 3 (Weeks 9--11)}}
+\rfoot{\small Page \thepage}
+\lfoot{\small Due: Week 11 Friday 11:59 PM}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{\color{gimpanavy}GHANA INSTITUTE OF MANAGEMENT AND PUBLIC ADMINISTRATION}}\\
+    {\large \textbf{\color{gimpaaccent}School of Technology $|$ Department of Computer Science}}\\
+    \vspace{4pt}
+    \hrule height 1.2pt \color{gimpanavy}
+    \vspace{6pt}
+    {\LARGE \textbf{\color{gimpanavy}CS 305: Problem Set 3 (Turing Machines \& Decidability)}}\\
+    {\large \textbf{Weeks 9--11 $|$ Total Marks: 100 $|$ Weight: 7.5\% of Final Grade}}
+\end{center}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[colback=gimpalight, colframe=gimpanavy, title=\textbf{Instructions \& Guidelines}]
+\begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+    \item Turing machine transition functions must follow the format $\delta(q, a) = (r, b, L/R)$.
+    \item High-level implementation descriptions (Sipser Stage 1, Stage 2\dots) must be precise and account for tape boundaries.
+    \item Decidability proofs must explicitly construct a decider machine that is guaranteed to halt on all inputs.
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{8pt}
+
+\section*{Problem 1: Low-Level Turing Machine Design (25 Marks)}
+Let $\Sigma = \{0, 1\}$. Design a single-tape Deterministic Turing Machine $M = (Q, \Sigma, \Gamma, \delta, q_0, q_{\text{accept}}, q_{\text{reject}})$ that decides the non-context-free language:
+$$L_1 = \{0^n 1^n 0^n \mid n \ge 0\}$$
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item State the formal components: state set $Q$, tape alphabet $\Gamma$, start state $q_0$, $q_{\text{accept}}$, and $q_{\text{reject}}$. (10 Marks)
+    \item Provide the complete transition function table for $\delta$, and trace the configuration sequence of $M$ on the input string $w = 010$. (15 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 2: Multi-Tape to Single-Tape Equivalence (25 Marks)}
+Let $M$ be a $k$-tape Turing machine that runs in time $t(n)$ on inputs of length $n$.
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Describe the formal simulation algorithm by which a single-tape Turing machine $S$ simulates the execution of $k$-tape machine $M$ (Sipser Theorem 3.13). (15 Marks)
+    \item Rigorously prove that the total running time of the single-tape simulator $S$ is $\mathcal{O}\big((t(n))^2\big)$. (10 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 3: Decidable Language Decision Procedures (25 Marks)}
+Prove that the following languages are **Turing-decidable** by constructing explicit deciders that are guaranteed to halt on every input:
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item $E_{\text{DFA}} = \{\langle A \rangle \mid A \text{ is a DFA and } L(A) = \varnothing\}$. (12 Marks)
+    \item $EQ_{\text{DFA}} = \{\langle A, B \rangle \mid A, B \text{ are DFAs and } L(A) = L(B)\}$. (Hint: Use the symmetric difference construction $L(C) = (L(A) \cap \overline{L(B)}) \cup (\overline{L(A)} \cap L(B))$). (13 Marks)
+\end{enumerate}
+
+\vspace{8pt}
+
+\section*{Problem 4: Modern Applied Case Study --- Chain-of-Thought in Large Language Models (25 Marks)}
+In modern theoretical machine learning, fixed-depth autoregressive Transformers are known to have limited computational depth (bounded circuit class $\textsf{TC}^0$). However, when augmented with **Chain-of-Thought (scratchpad memory)**, their computational expressivity expands dramatically.
+\begin{enumerate}[label=\textbf{(\alph*)}]
+    \item Formulate how an autoregressive LLM outputting intermediate tokens on an external scratchpad simulates the read/write tape transitions of a Universal Turing Machine. (12 Marks)
+    \item Explain why the Church--Turing Thesis implies that no neural network architecture, regardless of parameter count or dataset size, can exceed the computational recognition capability of a Turing Machine. (13 Marks)
+\end{enumerate}
+
+\vfill
+\begin{center}
+    \small\color{darkgray}
+    \textit{CS 305 Theory of Computation --- Ghana Institute of Management and Public Administration (GIMPA)}
+\end{center}
+
+\end{document}
