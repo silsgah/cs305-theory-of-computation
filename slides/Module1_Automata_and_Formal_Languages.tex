@@ -1,325 +1,663 @@
-\documentclass[aspectratio=169,10pt]{beamer}
-\usetheme{Madrid}
-\usecolortheme{whale}
+\documentclass[aspectratio=169, 10pt]{beamer}
 
-% --- Packages ---
+% ==============================================================================
+% Packages & Professional Academic Typography
+% ==============================================================================
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath,amssymb}
-\usepackage{colortbl}
-\usepackage{tcolorbox}
+\usepackage[most]{tcolorbox}
 \usepackage{tikz}
-\usetikzlibrary{automata, positioning, arrows.meta, shapes.geometric, calc}
+\usetikzlibrary{automata, positioning, arrows.meta, shapes.geometric, calc, fit}
 
-% --- Custom Colors ---
-\definecolor{gimpanavy}{RGB}{0, 43, 73}
-\definecolor{gimpaaccent}{RGB}{30, 115, 190}
-\definecolor{gimpalight}{RGB}{245, 247, 251}
-\definecolor{gimpaheader}{RGB}{230, 238, 248}
-\definecolor{darkred}{RGB}{180, 40, 40}
-\definecolor{darkgreen}{RGB}{30, 140, 60}
-\definecolor{papergold}{RGB}{210, 140, 10}
+% ==============================================================================
+% Design System & Refined Academic Color Palette (GIMPA Branding)
+% ==============================================================================
+\definecolor{gimpanavy}{RGB}{10, 37, 64}       % #0A2540 Deep Academic Navy
+\definecolor{gimpaslate}{RGB}{51, 65, 85}      % #334155 Slate Gray
+\definecolor{gimpaaccent}{RGB}{30, 107, 184}   % #1E6BB8 Scholarly Blue
+\definecolor{charcoalText}{RGB}{30, 41, 59}     % #1E293B High-contrast body
+\definecolor{lightBg}{RGB}{248, 250, 252}      % #F8FAFC Clean card background
+\definecolor{ruleGray}{RGB}{226, 232, 240}     % #E2E8F0 Subtle divider
+\definecolor{accentCrimson}{RGB}{185, 28, 28}  % #B91C1C Academic Alert
+\definecolor{accentGreen}{RGB}{21, 128, 61}    % #15803D Success / Verification
+\definecolor{accentAmber}{RGB}{180, 83, 9}     % #B45309 Amber Warning / Key Insight
 
-\setbeamercolor{palette primary}{bg=gimpanavy,fg=white}
-\setbeamercolor{palette secondary}{bg=gimpaaccent,fg=white}
-\setbeamercolor{palette tertiary}{bg=gimpanavy,fg=white}
+% Beamer General Settings
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{normal text}{fg=charcoalText}
 \setbeamercolor{structure}{fg=gimpanavy}
-\setbeamercolor{titlelike}{parent=structure,bg=gimpaheader}
-\setbeamercolor{block title}{bg=gimpanavy,fg=white}
-\setbeamercolor{block body}{bg=gimpalight}
-\setbeamercolor{block title alerted}{bg=darkred,fg=white}
-\setbeamercolor{block title example}{bg=darkgreen,fg=white}
+\setbeamercolor{title}{fg=gimpanavy}
+\setbeamercolor{author}{fg=gimpaslate}
+\setbeamercolor{institute}{fg=gimpaslate}
+\setbeamercolor{date}{fg=gimpaslate}
 
-% --- Title Information ---
-\title[CS 305 $|$ Module 1]{Module 1: Automata, Formal Languages \& Modern Systems}
+% Clean, Dignified Frametitle
+\setbeamertemplate{frametitle}{
+  \vspace{0.15cm}
+  \noindent
+  {\large\bfseries\color{gimpanavy}\insertframetitle}
+  \ifx\insertframesubtitle\@empty\else
+    \\[0.05cm]{\footnotesize\color{gimpaslate}\insertframesubtitle}
+  \fi
+  \vspace{0.06cm}
+  {\color{ruleGray}\hrule height 0.6pt}
+  \vspace{0.08cm}
+}
+
+% Sleek Minimalist Footline
+\setbeamertemplate{footline}{
+  \vspace{-0.40cm}
+  \begin{center}
+    {\color{ruleGray}\rule{0.95\paperwidth}{0.5pt}}
+  \end{center}
+  \vspace{-0.15cm}
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=0.42\paperwidth,ht=2.5ex,dp=1.2ex,left]{footline}%
+      \hspace*{0.6cm}{\scriptsize\color{gimpaslate}\textbf{CS 305: Theory of Computation} \;\textbar\; Module 1}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.36\paperwidth,ht=2.5ex,dp=1.2ex,center]{footline}%
+      {\scriptsize\color{gimpaslate}GIMPA School of Technology}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=0.22\paperwidth,ht=2.5ex,dp=1.2ex,right]{footline}%
+      {\scriptsize\color{gimpaslate}\insertframenumber{} / \inserttotalframenumber}\hspace*{0.6cm}
+    \end{beamercolorbox}%
+  }%
+  \vspace*{0.20cm}
+}
+
+% Minimalist Square Bullets
+\setbeamertemplate{itemize item}{{\color{gimpaaccent}\scriptsize$\blacksquare$}}
+\setbeamertemplate{itemize subitem}{{\color{gimpaslate}\tiny$\blacktriangleright$}}
+\setbeamertemplate{enumerate item}{\textbf{\color{gimpanavy}\insertenumlabel.}}
+
+% ==============================================================================
+% Card Environments & Section Styling
+% ==============================================================================
+\newcommand{\colheader}[1]{%
+  {\noindent\footnotesize\bfseries\color{gimpanavy}#1}%
+  \vspace{0.03cm}%
+  {\color{gimpanavy!30}\hrule height 0.5pt}%
+  \vspace{0.08cm}%
+}
+
+\tcbset{
+  before=\vspace{2pt},
+  after=\vspace{2pt},
+  top=3.5pt,
+  bottom=3.5pt,
+  left=6pt,
+  right=6pt,
+  boxrule=0.5pt,
+  arc=2pt,
+  conceptcard/.style={
+    enhanced,
+    colback=lightBg,
+    colframe=ruleGray,
+    borderline west={2.5pt}{0pt}{gimpanavy}
+  },
+  examplecard/.style={
+    enhanced,
+    colback=lightBg,
+    colframe=ruleGray,
+    borderline west={2.5pt}{0pt}{accentGreen}
+  },
+  alertcard/.style={
+    enhanced,
+    colback=lightBg,
+    colframe=ruleGray,
+    borderline west={2.5pt}{0pt}{accentCrimson}
+  },
+  spotlightcard/.style={
+    enhanced,
+    colback=gimpaaccent!5,
+    colframe=ruleGray,
+    borderline west={2.5pt}{0pt}{gimpaaccent}
+  }
+}
+
+% TikZ Automata Settings
+\tikzset{
+  every state/.style={
+    draw=gimpanavy,
+    thick,
+    fill=white,
+    minimum size=8mm,
+    inner sep=1pt,
+    font=\small\bfseries\color{gimpanavy}
+  },
+  initial text={},
+  initial distance=5mm,
+  every initial by arrow/.style={
+    ->,
+    >=stealth,
+    thick,
+    draw=gimpanavy
+  },
+  accepting/.style={
+    double,
+    double distance=1.5pt,
+    thick,
+    draw=gimpanavy
+  },
+  every edge/.style={
+    ->,
+    >=stealth,
+    thick,
+    draw=gimpanavy,
+    font=\footnotesize
+  }
+}
+
+% ==============================================================================
+% Course & Presentation Metadata
+% ==============================================================================
+\title{Module 1: Automata, Formal Languages \& Modern Systems}
 \subtitle{CS 305: Theory of Computation (Weeks 1--5)}
-\author[GIMPA School of Technology]{Department of Computer Science}
-\institute[GIMPA]{Ghana Institute of Management and Public Administration (GIMPA)}
+\author{Department of Computer Science}
+\institute{Ghana Institute of Management and Public Administration (GIMPA)}
 \date{Level 300 Undergraduate}
 
+% ==============================================================================
+% Document Content
+% ==============================================================================
 \begin{document}
 
-% --- Title Slide ---
-\begin{frame}
-    \titlepage
+% ------------------------------------------------------------------------------
+% Slide 1: Title Slide (Minimalist University Lecture Layout)
+% ------------------------------------------------------------------------------
+\begin{frame}[plain]
+  \vspace{1.0cm}
+  \begin{center}
+    {\large\bfseries\color{gimpaaccent} CS 305: THEORY OF COMPUTATION}\\[0.25cm]
+    {\Large\bfseries\color{gimpanavy} Module 1: Automata, Formal Languages \& Modern Systems}\\[0.15cm]
+    {\normalsize\color{gimpaslate} Weeks 1--5: From Mathematical Foundations to Systems Security}\\[0.6cm]
+    
+    {\color{ruleGray}\rule{0.50\textwidth}{0.8pt}}\\[0.65cm]
+    
+    {\normalsize\bfseries\color{charcoalText} Department of Computer Science}\\[0.12cm]
+    {\footnotesize\color{gimpaslate} School of Technology}\\[0.12cm]
+    {\footnotesize\color{gimpaslate} Ghana Institute of Management and Public Administration (GIMPA)}\\[0.45cm]
+    {\footnotesize\color{gimpaslate} Level 300 Undergraduate $\cdot$ Semester 1}
+  \end{center}
 \end{frame}
 
-% --- Overview Slide ---
+% ------------------------------------------------------------------------------
+% Slide 2: Module 1 Roadmap: Theory <-> Systems
+% ------------------------------------------------------------------------------
 \begin{frame}{Module 1 Roadmap: Theory $\leftrightarrow$ Cutting-Edge Systems}
-    \begin{columns}[T]
-        \column{0.48\textwidth}
-        \begin{block}{Theoretical Foundations}
-            \begin{itemize}\setlength{\itemsep}{3pt}
-                \item \textbf{Wk 1:} Formal Languages \& Chomsky Hierarchy
-                \item \textbf{Wk 2:} Deterministic Finite Automata (DFAs)
-                \item \textbf{Wk 3:} NFAs \& Powerset Construction Algorithm
-                \item \textbf{Wk 4:} Regular Expressions \& GNFA State Elimination
-                \item \textbf{Wk 5:} Non-regular Languages \& Pumping Lemma
-            \end{itemize}
-        \end{block}
-        
-        \column{0.48\textwidth}
-        \begin{alertblock}{Research Literature \& System Spotlights}
-            \begin{itemize}\setlength{\itemsep}{3pt}
-                \item \textbf{Wk 1:} \textbf{ICLR 2023:} Neural Networks \& Chomsky Hierarchy
-                \item \textbf{Wk 2:} \textbf{ACM SIGCOMM:} 100 Gbps Packet Inspection
-                \item \textbf{Wk 3:} \textbf{CACM:} Linear vs. Exponential Regex Engines
-                \item \textbf{Wk 4:} \textbf{USENIX Security 2018:} ReDoS Vulnerabilities
-                \item \textbf{Wk 5:} Bounded Memory in Edge Hardware \& AI Models
-            \end{itemize}
-        \end{alertblock}
-    \end{columns}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \colheader{Theoretical Foundations (Sipser Ch. 1)}
+      \begin{tcolorbox}[conceptcard]
+        \begin{itemize}\setlength{\itemsep}{3.5pt}\footnotesize
+          \item \textbf{Week 1:} Formal Languages \& Chomsky Hierarchy
+          \item \textbf{Week 2:} Deterministic Finite Automata (DFAs)
+          \item \textbf{Week 3:} NFAs \& Powerset Construction Algorithm
+          \item \textbf{Week 4:} Regular Expressions \& GNFA State Elimination
+          \item \textbf{Week 5:} Non-regular Languages \& The Pumping Lemma
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.48\textwidth}
+      \colheader{Research Literature \& System Spotlights}
+      \begin{tcolorbox}[spotlightcard]
+        \begin{itemize}\setlength{\itemsep}{3.5pt}\footnotesize
+          \item \textbf{Week 1:} \textbf{ICLR 2023:} Neural Networks \& Chomsky Hierarchy
+          \item \textbf{Week 2:} \textbf{ACM SIGCOMM:} 100 Gbps Deep Packet Inspection
+          \item \textbf{Week 3:} \textbf{CACM:} Linear vs. Exponential Regex Engines
+          \item \textbf{Week 4:} \textbf{USENIX Security 2018:} Catastrophic ReDoS
+          \item \textbf{Week 5:} Bounded Memory in Edge Hardware \& Transformers
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+  
+  \vspace{0.20cm}
+  \begin{center}
+    {\footnotesize\color{gimpaslate}\textit{Central Thesis: Finite automata are not historical curiosities; they govern line-rate packet routers, compilers, and LLM reasoning boundaries.}}
+  \end{center}
 \end{frame}
 
-% ==============================================================================
-\section{Week 1: Foundations \& Chomsky Hierarchy}
-% ==============================================================================
-
+% ------------------------------------------------------------------------------
+% Slide 3: Week 1: Core Mathematical Foundations
+% ------------------------------------------------------------------------------
+% ------------------------------------------------------------------------------
+% Slide 3: Week 1: Core Mathematical Foundations
+% ------------------------------------------------------------------------------
 \begin{frame}{Week 1: Core Mathematical Foundations}
-    \begin{block}{Alphabets, Strings, and Languages (Sipser Ch. 0)}
-        \begin{itemize}\setlength{\itemsep}{3pt}
-            \item \textbf{Alphabet ($\Sigma$):} A non-empty, finite set of symbols (e.g., $\Sigma = \{0, 1\}$, $\Sigma = \{a, b, \ldots, z\}$).
-            \item \textbf{String ($w$):} A finite sequence of symbols chosen from $\Sigma$. Length $|w|$ is the number of symbols. The empty string is denoted $\varepsilon$ ($|\varepsilon| = 0$).
-            \item \textbf{Language ($L$):} A set of strings over an alphabet ($L \subseteq \Sigma^*$).
-            \item \textbf{Kleene Star ($\Sigma^*$):} The set of all possible finite strings over $\Sigma$, including $\varepsilon$.
+  \begin{tcolorbox}[conceptcard]
+    {\bfseries\footnotesize\color{gimpanavy} Alphabets, Strings, and Languages (Sipser Ch. 0)}
+    \vspace{0.06cm}
+    \begin{itemize}\setlength{\itemsep}{2.5pt}\footnotesize
+      \item \textbf{Alphabet ($\Sigma$):} A non-empty, finite set of symbols (e.g., binary $\Sigma = \{0, 1\}$). \\
+            {\scriptsize\color{gimpaaccent}$\blacktriangleright$ \textbf{Modern AI Connection:} \textbf{LLM Tokenization Alphabets} (e.g., GPT/Llama BPE vocabulary $|\Sigma| \approx 100\text{k}$ token IDs).}
+      \item \textbf{String ($w$):} A finite sequence of symbols chosen from $\Sigma$. Length $|w|$ denotes symbol count. The empty string is denoted $\varepsilon$ ($|\varepsilon| = 0$).
+      \item \textbf{Language ($L$):} Any set of strings formed over an alphabet ($L \subseteq \Sigma^*$).
+      \item \textbf{Kleene Star ($\Sigma^*$):} The set of all possible finite strings over $\Sigma$, including $\varepsilon$: $\Sigma^* = \bigcup_{k=0}^{\infty} \Sigma^k$.
+    \end{itemize}
+  \end{tcolorbox}
+
+  \vspace{0.08cm}
+  \begin{tcolorbox}[examplecard]
+    {\bfseries\footnotesize\color{accentGreen} Concrete Language Instance}
+    \vspace{0.04cm}
+    \footnotesize
+    Let $\Sigma = \{0, 1\}$. The language of all binary strings with an even number of zeros is defined as:
+    $$L = \bigl\{w \in \Sigma^* \;\big|\; |w|_0 \equiv 0 \pmod 2\bigr\} = \{\varepsilon, 1, 11, 00, 010, 1001, \ldots\}.$$
+  \end{tcolorbox}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 4: Week 1 Research Spotlight: Chomsky Hierarchy in Modern AI
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 1 Spotlight: Chomsky Hierarchy in Modern AI}
+  \begin{tcolorbox}[spotlightcard, top=2pt, bottom=2pt, before=\vspace{0pt}, after=\vspace{2pt}]
+    \footnotesize
+    \textbf{Seminal Literature (ICLR 2023 Spotlight):} 
+    \textbf{Delétang et al. (Google DeepMind)}, \textit{``Neural Networks and the Chomsky Hierarchy,''} \textbf{ICLR 2023}.
+  \end{tcolorbox}
+
+  \vspace{0.04cm}
+  \begin{columns}[T]
+    \begin{column}{0.54\textwidth}
+      \colheader{The Chomsky Hierarchy (1956)}
+      \begin{tcolorbox}[conceptcard, colback=gimpanavy!6, borderline west={2.5pt}{0pt}{gimpanavy}, top=1.2pt, bottom=1.2pt, before=\vspace{0.5pt}, after=\vspace{0.5pt}]
+        \scriptsize
+        \textbf{Type 0: Recursively Enumerable} \hfill \textbf{Turing / CoT LLMs}\\
+        {\tiny\color{gimpaslate}Unrestricted Grammars ($\alpha \to \beta$) $\cdot$ Arbitrary computation}
+      \end{tcolorbox}
+      \begin{tcolorbox}[conceptcard, colback=gimpaaccent!7, borderline west={2.5pt}{0pt}{gimpaaccent}, top=1.2pt, bottom=1.2pt, before=\vspace{0.5pt}, after=\vspace{0.5pt}]
+        \scriptsize
+        \textbf{Type 1: Context-Sensitive} \hfill \textbf{Linear Bounded Automata}\\
+        {\tiny\color{gimpaslate}Context-Sensitive Grammars ($\alpha A \beta \to \alpha \gamma \beta$) $\cdot$ Bounded tape}
+      \end{tcolorbox}
+      \begin{tcolorbox}[conceptcard, colback=accentAmber!7, borderline west={2.5pt}{0pt}{accentAmber}, top=1.2pt, bottom=1.2pt, before=\vspace{0.5pt}, after=\vspace{0.5pt}]
+        \scriptsize
+        \textbf{Type 2: Context-Free} \hfill \textbf{Pushdown Automata (PDAs)}\\
+        {\tiny\color{gimpaslate}Context-Free Grammars ($A \to \gamma$) $\cdot$ Stack memory, AST parsers}
+      \end{tcolorbox}
+      \begin{tcolorbox}[conceptcard, colback=accentGreen!8, borderline west={2.5pt}{0pt}{accentGreen}, top=1.2pt, bottom=1.2pt, before=\vspace{0.5pt}, after=\vspace{0.5pt}]
+        \scriptsize
+        \textbf{Type 3: Regular Languages} \hfill \textbf{Finite Automata (DFAs/NFAs)}\\
+        {\tiny\color{gimpaslate}Regular Grammars ($A \to aB$) $\cdot$ Finite memory, tokenizers, regex}
+      \end{tcolorbox}
+      \vspace{0.03cm}
+      \begin{center}
+        {\tiny\color{charcoalText}\textbf{Strict Set Inclusion:} $\mathcal{L}(\text{Type 3}) \subsetneq \mathcal{L}(\text{Type 2}) \subsetneq \mathcal{L}(\text{Type 1}) \subsetneq \mathcal{L}(\text{Type 0})$}
+      \end{center}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.44\textwidth}
+      \colheader{Why Finite Models Fail on Recursive Syntax}
+      \vspace{0.02cm}
+      \begin{tcolorbox}[conceptcard, top=3pt, bottom=3pt]
+        \begin{itemize}\setlength{\itemsep}{2.5pt}\footnotesize
+          \item \textbf{Limits of Finite Attention:} Standard Transformers without external scratchpads fail to generalize on non-regular counting tasks ($a^n b^n c^n$).
+          \item \textbf{Theoretical Mirror:} Neural architectures strictly obey the classical 1956 Chomsky hierarchy boundaries in out-of-distribution evaluation.
+          \item \textbf{Chain-of-Thought (CoT):} Generating reasoning tokens elevates bounded models to Type 0 Turing computation!
         \end{itemize}
-    \end{block}
-    
-    \begin{exampleblock}{Language Example}
-        Let $\Sigma = \{0, 1\}$. Then $L = \{w \in \Sigma^* \mid w \text{ has an even number of } 0\text{'s}\}$ is a formal language over $\Sigma$.
-    \end{exampleblock}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Week 1 Research Spotlight: Neural Networks \& The Chomsky Hierarchy}
-    \begin{exampleblock}{Seminal Reading: ICLR 2023 (Spotlight)}
-        \textbf{Delétang et al. (Google DeepMind)}, \textit{``Neural Networks and the Chomsky Hierarchy,''} \textbf{International Conference on Learning Representations (ICLR 2023)}.
-    \end{exampleblock}
-    
-    \begin{columns}[T]
-        \column{0.50\textwidth}
-        \begin{center}
-        \begin{tikzpicture}[scale=0.7]
-            \draw[fill=red!15, draw=red!70, thick] (0,0) circle (2.8cm) node[above=2.1cm] {\scriptsize\textbf{Type 0: Rec. Enumerable} (Turing / CoT LLMs)};
-            \draw[fill=orange!20, draw=orange!70, thick] (0,-0.5) circle (2.1cm) node[above=1.5cm] {\scriptsize\textbf{Type 1: Context-Sensitive} (LBAs)};
-            \draw[fill=blue!20, draw=blue!70, thick] (0,-0.9) circle (1.5cm) node[above=0.9cm] {\scriptsize\textbf{Type 2: Context-Free} (PDAs / ASTs)};
-            \draw[fill=green!25, draw=green!70, thick] (0,-1.2) circle (0.9cm) node[above=0.3cm] {\scriptsize\textbf{Type 3: Regular} (DFAs)};
-        \end{tikzpicture}
-        \end{center}
-        
-        \column{0.46\textwidth}
-        \begin{alertblock}{Key Empirical Findings}
-            \begin{itemize}\small
-                \item Standard Transformers without memory fail to generalize on non-regular languages ($a^n b^n c^n$).
-                \item Memory-augmented neural models track the Chomsky hierarchy with mathematical precision!
-            \end{itemize}
-        \end{alertblock}
-    \end{columns}
-\end{frame}
-
-% ==============================================================================
-\section{Week 2: Deterministic Finite Automata (DFAs)}
-% ==============================================================================
-
+% ------------------------------------------------------------------------------
+% Slide 5: Week 2: Deterministic Finite Automata (DFA)
+% ------------------------------------------------------------------------------
 \begin{frame}{Week 2: Deterministic Finite Automata (DFA)}
-    \begin{block}{Formal Definition (Sipser Def 1.5)}
-        A \textbf{Deterministic Finite Automaton (DFA)} is a 5-tuple $(Q, \Sigma, \delta, q_0, F)$:
-        \begin{enumerate}
-            \item $Q$ is a finite set of \textbf{states}.
-            \item $\Sigma$ is a finite set of symbols (\textbf{alphabet}).
-            \item $\delta: Q \times \Sigma \to Q$ is the \textbf{transition function}.
-            \item $q_0 \in Q$ is the \textbf{start state}.
-            \item $F \subseteq Q$ is the set of \textbf{accept (final) states}.
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \colheader{Formal 5-Tuple Definition (Sipser Def 1.5)}
+      \begin{tcolorbox}[conceptcard]
+        \footnotesize
+        A \textbf{DFA} is a 5-tuple $\bigl(Q, \Sigma, \delta, q_0, F\bigr)$:
+        \begin{enumerate}\setlength{\itemsep}{2pt}
+          \item $Q$: Finite set of internal \textbf{states}.
+          \item $\Sigma$: Finite input \textbf{alphabet}.
+          \item $\delta: Q \times \Sigma \to Q$: \textbf{Transition function}.
+          \item $q_0 \in Q$: Designated \textbf{start state}.
+          \item $F \subseteq Q$: Set of \textbf{accept states}.
         \end{enumerate}
-    \end{block}
-    
-    \begin{exampleblock}{DFA State Diagram: Strings ending with '1'}
-        \centering
-        \begin{tikzpicture}[shorten >=1pt, node distance=2.5cm, on grid, auto]
-           \node[state, initial] (q0)   {$q_0$}; 
-           \node[state, accepting] (q1) [right=of q0] {$q_1$}; 
-            \path[->] 
-            (q0) edge [loop above] node {0} ()
-                 edge [bend left]  node {1} (q1)
-            (q1) edge [loop above] node {1} ()
-                 edge [bend left]  node {0} (q0);
+      \end{tcolorbox}
+      \vspace{0.05cm}
+      \begin{tcolorbox}[examplecard]
+        \scriptsize
+        \textbf{Determinism Invariant:} For every pair $(q, a) \in Q \times \Sigma$, exactly one transition exists.
+      \end{tcolorbox}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.48\textwidth}
+      \colheader{DFA State Diagram: Strings Ending in `1'}
+      \vspace{0.05cm}
+      \begin{center}
+        \begin{tikzpicture}[node distance=2.2cm, auto]
+          \node[state, initial] (q0) {$q_0$}; 
+          \node[state, accepting] (q1) [right=of q0] {$q_1$}; 
+          \path[->] 
+          (q0) edge [loop above] node {0} ()
+               edge [bend left=25] node {1} (q1)
+          (q1) edge [loop above] node {1} ()
+               edge [bend left=25] node {0} (q0);
         \end{tikzpicture}
-    \end{exampleblock}
+      \end{center}
+      \vspace{-0.15cm}
+      \begin{tcolorbox}[conceptcard]
+        \scriptsize
+        \textbf{Trace on $w = 0101$:} \\
+        $q_0 \xrightarrow{0} q_0 \xrightarrow{1} q_1 \xrightarrow{0} q_0 \xrightarrow{1} q_1 \in F$ (\textbf{Accepted}).\\[0.05cm]
+        \textbf{Complexity:} Strictly $\mathcal{O}(|w|)$ linear time, $\mathcal{O}(1)$ space.
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Week 2 Research Spotlight: High-Speed Deep Packet Inspection}
-    \begin{exampleblock}{Seminal Reading: ACM SIGCOMM}
-        \textbf{Kumar et al. (Univ. of Wisconsin / Cisco)}, \textit{``Algorithms to Accelerate Multiple Regular Expression Matching for Deep Packet Inspection,''} \textbf{ACM SIGCOMM CCR}.
-    \end{exampleblock}
-    
-    \begin{columns}[T]
-        \column{0.48\textwidth}
-        \begin{block}{The Hardware Challenge}
-            \begin{itemize}
-                \item Modern network switches process 100+ Gbps traffic in real time.
-                \item Snort and Zeek firewalls must scan every byte against 10,000+ malware signature patterns.
-            \end{itemize}
-        \end{block}
-        
-        \column{0.48\textwidth}
-        \begin{alertblock}{The DFA Solution: $D^2FA$}
-            \begin{itemize}
-                \item Hardware-compiled DFAs process each incoming byte in strictly \textbf{1 clock cycle} ($\mathcal{O}(1)$ per character).
-                \item Zero packet buffering, zero drops, mathematically optimal throughput!
-            \end{itemize}
-        \end{alertblock}
-    \end{columns}
-\end{frame}
+% ------------------------------------------------------------------------------
+% Slide 6: Week 2 Spotlight: Deep Packet Inspection (SIGCOMM)
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 2 Spotlight: High-Speed Deep Packet Inspection}
+  \begin{tcolorbox}[spotlightcard]
+    \footnotesize
+    \textbf{Seminal Literature (ACM SIGCOMM):} \\
+    \textbf{Kumar et al. (Univ. of Wisconsin / Cisco)}, \textit{``Algorithms to Accelerate Multiple Regular Expression Matching for Deep Packet Inspection,''} \textbf{ACM SIGCOMM CCR}.
+  \end{tcolorbox}
 
-% ==============================================================================
-\section{Week 3: Nondeterministic Finite Automata (NFAs)}
-% ==============================================================================
-
-\begin{frame}{Week 3: Nondeterministic Finite Automata (NFA)}
-    \begin{block}{Formal Definition (Sipser Def 1.16)}
-        An \textbf{NFA} is a 5-tuple $(Q, \Sigma, \delta, q_0, F)$ where the transition function allows non-deterministic branching and $\varepsilon$-transitions:
-        $$\delta: Q \times \Sigma_{\varepsilon} \to \mathcal{P}(Q), \quad \text{where } \Sigma_{\varepsilon} = \Sigma \cup \{\varepsilon\}$$
-    \end{block}
-    
-    \begin{columns}[T]
-        \column{0.48\textwidth}
-        \begin{exampleblock}{NFA Power \& Simplicity}
-            \begin{itemize}
-                \item Allows multiple parallel branches of computation.
-                \item Accepts if \textit{at least one} branch reaches an accept state.
-                \item Exponentially more concise than DFAs for many languages.
-            \end{itemize}
-        \end{exampleblock}
-        
-        \column{0.48\textwidth}
-        \begin{alertblock}{Theorem: Equivalence (Sipser Thm 1.39)}
-            Every NFA has an equivalent DFA!
-            $$\text{Language Recognizable by NFA} \equiv \text{Regular Language}$$
-            \textbf{Proof Method:} Powerset (Subset) Construction.
-        \end{alertblock}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Week 3: The Powerset (Subset) Construction}
-    \begin{block}{Algorithm: Converting NFA $N=(Q, \Sigma, \delta, q_0, F)$ to DFA $M=(Q', \Sigma, \delta', q_0', F')$}
-        \begin{enumerate}\setlength{\itemsep}{3pt}
-            \item Set DFA states to the power set: $Q' = \mathcal{P}(Q)$. (If $|Q| = k$, then $|Q'| \le 2^k$).
-            \item Start state: $q_0' = E(\{q_0\})$ (where $E(R)$ is the $\varepsilon$-closure of state set $R$).
-            \item Transition function: For $R \in Q'$ and $a \in \Sigma$,
-            $$\delta'(R, a) = \bigcup_{r \in R} E(\delta(r, a))$$
-            \item Accept states: $F' = \{R \in Q' \mid R \cap F \neq \varnothing\}$.
-        \end{enumerate}
-    \end{block}
-\end{frame}
-
-% ==============================================================================
-\section{Week 4: Regular Expressions \& Catastrophic ReDoS}
-% ==============================================================================
-
-\begin{frame}{Week 4: Regular Expressions \& Kleene's Theorem}
-    \begin{block}{Inductive Definition of Regular Expressions (Sipser Def 1.52)}
-        $R$ is a regular expression if $R$ is:
-        \begin{enumerate}
-            \item $a \in \Sigma$, $\varepsilon$, or $\varnothing$ (Atomic base cases).
-            \item $(R_1 \cup R_2)$ (\textbf{Union}), $(R_1 \circ R_2)$ (\textbf{Concatenation}), or $(R_1)^*$ (\textbf{Star}).
-        \end{enumerate}
-    \end{block}
-    
-    \begin{exampleblock}{Kleene's Theorem}
-        $$\text{A language } L \text{ is regular} \iff L \text{ is described by a regular expression} \iff L \text{ is recognized by a DFA/NFA.}$$
-    \end{exampleblock}
-\end{frame}
-
-\begin{frame}{Week 4 Research Spotlight: USENIX Security 2018 \& ReDoS Vulnerabilities}
-    \begin{exampleblock}{Seminal Reading: USENIX Security 2018}
-        \textbf{Staicu \& Pradel (TU Darmstadt)}, \textit{``Freezing the Web: A Study of ReDoS Vulnerabilities in JavaScript-based Web Servers,''} \textbf{USENIX Security Symposium 2018}.
-    \end{exampleblock}
-    
-    \begin{columns}[T]
-        \column{0.48\textwidth}
-        \begin{block}{The Root Cause: Backtracking Engines}
-            \begin{itemize}
-                \item Python \texttt{re}, Node.js, and Java use recursive backtracking for regex matching.
-                \item On pattern \texttt{(a+)+b} and input $a^n$, engine evaluates $2^n$ permutations $\implies$ \textbf{Server CPU freeze!}
-            \end{itemize}
-        \end{block}
-        
-        \column{0.48\textwidth}
-        \begin{alertblock}{The Automata Fix (Google RE2 / Rust regex)}
-            \begin{itemize}
-                \item Build an NFA $\to$ DFA on the fly using Thompson's construction.
-                \item Guarantees $\mathcal{O}(n)$ linear matching time on all inputs!
-            \end{itemize}
-        \end{alertblock}
-    \end{columns}
-\end{frame}
-
-% ==============================================================================
-\section{Week 5: Non-regular Languages \& The Pumping Lemma}
-% ==============================================================================
-
-\begin{frame}{Week 5: Limits of Finite Automata}
-    \begin{columns}[T]
-        \column{0.48\textwidth}
-        \begin{block}{The Pigeonhole Principle}
-            \begin{itemize}
-                \item A DFA with $p$ states processing a string of length $n \ge p$ must visit at least one state \textbf{more than once}.
-                \item Therefore, the computation contains a \textbf{loop}.
-                \item The string segment corresponding to the loop can be ``pumped'' (repeated 0, 2, 3, \ldots times) and must still be accepted!
-            \end{itemize}
-        \end{block}
-        
-        \column{0.48\textwidth}
-        \begin{center}
-        \begin{tikzpicture}[shorten >=1pt, node distance=2.2cm, auto]
-           \node[state] (q0) {$q_0$}; 
-           \node[state] (q1) [right=of q0] {$q_j$}; 
-           \node[state, accepting] (q2) [right=of q1] {$q_{\text{acc}}$}; 
-            \path[->] 
-            (q0) edge node {$x$} (q1)
-            (q1) edge [loop above] node {$y$ (loop)} (q1)
-                 edge node {$z$} (q2);
-        \end{tikzpicture}
-        \end{center}
-        \small String $s = xyz$. For any $i \ge 0$, $xy^iz$ must also be accepted.
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Week 5: The Pumping Lemma for Regular Languages (Sipser Thm 1.70)}
-    \begin{block}{Formal Theorem Statement}
-        If $L$ is a regular language, then there exists a pumping length $p \ge 1$ such that every string $s \in L$ with $|s| \ge p$ can be divided into $s = xyz$ satisfying:
-        \begin{enumerate}
-            \item $xy^i z \in L$ for each $i \ge 0$,
-            \item $|y| > 0$,
-            \item $|xy| \le p$.
-        \end{enumerate}
-    \end{block}
-    
-    \begin{alertblock}{Adversarial Game Proof Strategy}
-        To prove $L = \{0^n 1^n \mid n \ge 0\}$ is non-regular:
-        \begin{enumerate}
-            \item \textbf{Assume} $L$ is regular (so $p$ exists).
-            \item \textbf{Choose} $s = 0^p 1^p \in L$ ($|s| = 2p \ge p$).
-            \item Since $|xy| \le p$, $y$ consists entirely of $0$'s ($y = 0^k, k > 0$).
-            \item Pump down with $i=0$: $xy^0z = 0^{p-k} 1^p \notin L$ (fewer $0$'s than $1$'s) $\implies$ \textbf{Contradiction!}
-        \end{enumerate}
-    \end{alertblock}
-\end{frame}
-
-% --- Summary Slide ---
-\begin{frame}{Module 1 Summary \& Looking Ahead to Module 2}
-    \begin{block}{Key Takeaways}
-        \begin{itemize}\setlength{\itemsep}{2pt}
-            \item \textbf{DFAs, NFAs, and Regular Expressions} are mathematically equivalent representations of \textbf{Regular Languages}.
-            \item Regular languages are strictly limited to problems that require \textbf{finite, bounded memory}.
-            \item They cannot count or match arbitrary nested structures ($0^n 1^n$ or balanced parentheses).
+  \vspace{0.06cm}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \colheader{The Line-Rate Hardware Challenge}
+      \begin{tcolorbox}[alertcard]
+        \begin{itemize}\setlength{\itemsep}{2.5pt}\scriptsize
+          \item \textbf{Extreme Bandwidth:} Modern edge routers and firewalls must scan \textbf{100+ Gbps} in real time without dropping frames.
+          \item \textbf{Massive Rule Sets:} Systems like Snort compare packet payloads against $\ge 10,000$ threat patterns simultaneously.
+          \item \textbf{State Explosion:} Combining $N$ regex rules creates a composite DFA with exponential states ($|Q| \sim 2^N$).
         \end{itemize}
-    \end{block}
-    
-    \begin{exampleblock}{Looking Ahead: Module 2 (Context-Free Languages \& Grammars)}
-        How do we parse programming languages, arithmetic expressions, and LLM JSON outputs? We add a \textbf{Stack} $\to$ \textbf{Pushdown Automata \& Context-Free Grammars!}
-    \end{exampleblock}
+      \end{tcolorbox}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.48\textwidth}
+      \colheader{The Automata Solution: Deferred $D^2FA$}
+      \begin{tcolorbox}[conceptcard]
+        \begin{itemize}\setlength{\itemsep}{2.5pt}\scriptsize
+          \item \textbf{$\mathcal{O}(1)$ Deterministic Lookup:} The hardware engine processes each incoming byte in strictly \textbf{one memory cycle}.
+          \item \textbf{Deferred DFA ($D^2FA$):} Eliminates redundant transitions via default failure pointers, reducing memory by \textbf{$>95\%$}.
+          \item \textbf{System Guarantee:} Zero packet buffering, deterministic line-rate security filtering.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 7: Week 3: Nondeterministic Finite Automata (NFAs)
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 3: Nondeterministic Finite Automata (NFA)}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \colheader{Formal Definition (Sipser Def 1.16)}
+      \begin{tcolorbox}[conceptcard]
+        \footnotesize
+        An \textbf{NFA} is a 5-tuple $\bigl(Q, \Sigma, \delta, q_0, F\bigr)$ where:
+        $$\delta: Q \times \Sigma_{\varepsilon} \to \mathcal{P}(Q), \quad \Sigma_{\varepsilon} = \Sigma \cup \{\varepsilon\}$$
+        \vspace{-0.15cm}
+        \begin{itemize}\setlength{\itemsep}{2pt}\scriptsize
+          \item \textbf{Branching:} Transitions to subsets of states.
+          \item \textbf{$\varepsilon$-Transitions:} State jumps without input.
+          \item \textbf{Acceptance:} Accepted if \textit{at least one} path terminates in an accept state $q \in F$.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.48\textwidth}
+      \colheader{Fundamental Equivalence Theorem}
+      \begin{tcolorbox}[examplecard]
+        \footnotesize
+        \textbf{Theorem (Sipser Thm 1.39):} \\
+        \textit{Every NFA has an equivalent DFA recognizing the exact same formal language.}
+        $$\mathcal{L}(\text{NFA}) = \mathcal{L}(\text{DFA}) = \text{Regular Languages}$$
+        \vspace{-0.15cm}
+        \begin{itemize}\setlength{\itemsep}{2pt}\scriptsize
+          \item \textbf{Proof Method:} Powerset (Subset) Construction.
+          \item \textbf{Expressive Equivalence:} Zero added power, but exponential descriptive conciseness ($|Q_{\text{NFA}}| \ll |Q_{\text{DFA}}|$).
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 8: Week 3: The Powerset (Subset) Construction Algorithm
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 3: The Powerset (Subset) Construction Algorithm}
+  \begin{tcolorbox}[conceptcard]
+    {\bfseries\footnotesize\color{gimpanavy} Algorithm: Convert NFA $N=(Q, \Sigma, \delta, q_0, F)$ to Equivalent DFA $M=(Q', \Sigma, \delta', q_0', F')$}
+    \vspace{0.06cm}
+    \begin{enumerate}\setlength{\itemsep}{2pt}\footnotesize
+      \item \textbf{State Space Construction:} The DFA state set is the power set of NFA states:
+        $$Q' = \mathcal{P}(Q) \implies |Q'| \le 2^{|Q|}.$$
+      \item \textbf{DFA Start State:} Include the initial state and all states reachable via $\varepsilon$-transitions:
+        $$q_0' = E(\{q_0\}), \quad \text{where } E(R) \text{ is the } \varepsilon\text{-closure of state set } R.$$
+      \item \textbf{DFA Transition Function:} For each subset $R \in Q'$ and symbol $a \in \Sigma$:
+        $$\delta'(R, a) = \bigcup_{r \in R} E\bigl(\delta(r, a)\bigr).$$
+      \item \textbf{DFA Accept States:} Any subset containing at least one original accept state:
+        $$F' = \bigl\{R \in Q' \;\big|\; R \cap F \neq \varnothing\bigr\}.$$
+    \end{enumerate}
+  \end{tcolorbox}
+
+  \vspace{0.08cm}
+  \begin{center}
+    {\footnotesize\color{gimpaslate}\textbf{Takeaway:} Nondeterminism provides exponential descriptive conciseness without increasing computational power.}
+  \end{center}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 9: Week 4: Regular Expressions & Kleene's Theorem
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 4: Regular Expressions \& Kleene's Theorem}
+  \begin{tcolorbox}[conceptcard]
+    {\bfseries\footnotesize\color{gimpanavy} Inductive Definition of Regular Expressions (Sipser Def 1.52)}
+    \vspace{0.06cm}
+    \footnotesize
+    A string $R$ is a regular expression over $\Sigma$ if $R$ is:
+    \begin{enumerate}\setlength{\itemsep}{1.5pt}
+      \item \textbf{Base Cases:} $a \in \Sigma$ ($\{a\}$), $\varepsilon$ ($\{\varepsilon\}$), or $\varnothing$ ($\emptyset$).
+      \item \textbf{Inductive Operations:} Given regular expressions $R_1, R_2$:
+        \begin{itemize}\setlength{\itemsep}{1pt}\footnotesize
+          \item \textbf{Union:} $R_1 \cup R_2$ (or $R_1 \mid R_2$), recognizing $L(R_1) \cup L(R_2)$.
+          \item \textbf{Concatenation:} $R_1 \circ R_2$ (or $R_1 R_2$), recognizing $\{uv \mid u \in L(R_1), v \in L(R_2)\}$.
+          \item \textbf{Star (Kleene Closure):} $R_1^*$, recognizing $\bigcup_{k=0}^{\infty} L(R_1)^k$.
+        \end{itemize}
+    \end{enumerate}
+  \end{tcolorbox}
+
+  \vspace{0.08cm}
+  \begin{tcolorbox}[examplecard]
+    {\bfseries\footnotesize\color{accentGreen} Kleene's Theorem (1956)}
+    \vspace{0.04cm}
+    \footnotesize
+    $$\text{Language } L \text{ is Regular} \iff L \text{ is described by a Regex} \iff L \text{ is recognized by a DFA / NFA.}$$
+    \vspace{-0.05cm}
+    \textbf{Equivalence Pipeline:} Regex $\xrightarrow{\text{Thompson's Alg.}}$ NFA $\xrightarrow{\text{Subset Const.}}$ DFA $\xrightarrow{\text{State Elimination}}$ Regex.
+  \end{tcolorbox}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 10: Week 4 Spotlight: USENIX Security 2018 & Catastrophic ReDoS
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 4 Spotlight: Catastrophic ReDoS Vulnerabilities}
+  \begin{tcolorbox}[spotlightcard]
+    \footnotesize
+    \textbf{Seminal Literature (USENIX Security 2018):} \\
+    \textbf{Staicu \& Pradel (TU Darmstadt)}, \textit{``Freezing the Web: A Study of ReDoS Vulnerabilities in JavaScript-based Web Servers,''} \textbf{USENIX Security Symposium 2018}.
+  \end{tcolorbox}
+
+  \vspace{0.06cm}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \colheader{Vulnerability: Backtracking Engines}
+      \begin{tcolorbox}[alertcard]
+        \begin{itemize}\setlength{\itemsep}{2.5pt}\scriptsize
+          \item \textbf{Engine Flaw:} Python \texttt{re}, Node.js (V8), and Java implement regex via recursive depth-first backtracking.
+          \item \textbf{Pathological Regex:} A nested quantifier like \texttt{(a+)+b} on input string $a^n$ requires $\mathcal{O}(2^n)$ evaluations.
+          \item \textbf{Denial of Service (ReDoS):} A 35-character malicious HTTP payload freezes Node.js event loops for 10+ hours ($100\%$ CPU spike).
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.48\textwidth}
+      \colheader{Solution: Automata-Theoretic Execution}
+      \begin{tcolorbox}[conceptcard]
+        \begin{itemize}\setlength{\itemsep}{2.5pt}\scriptsize
+          \item \textbf{The Thompson NFA Remedy:} Modern secure engines (Google \textbf{RE2}, Rust \texttt{regex}) abandon backtracking.
+          \item \textbf{Simultaneous Set Tracking:} The engine tracks all active NFA states in lockstep:
+            $$\mathcal{O}(|w| \cdot |Q|) \text{ strictly linear worst-case time!}$$
+          \item \textbf{Immunity:} Completely immune to algorithmic complexity attacks by theoretical construction.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 11: Week 5: Limits of Finite Automata & The Pigeonhole Principle
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 5: Limits of Finite Automata \& Pigeonhole Principle}
+  \begin{columns}[T, onlytextwidth]
+    \begin{column}{0.49\textwidth}
+      \colheader{The Pigeonhole Principle \& Loops}
+      \begin{tcolorbox}[conceptcard]
+        \begin{itemize}\setlength{\itemsep}{2.5pt}\footnotesize
+          \item Let $M$ be a DFA with $p$ states ($|Q| = p$).
+          \item If $M$ processes any string $s \in L(M)$ with length $|s| \ge p$, the path visits at least $p + 1$ states.
+          \item By the \textbf{Pigeonhole Principle}, at least one state $q_j \in Q$ must be visited \textbf{twice}.
+          \item The computation necessarily contains a \textbf{directed cycle (loop)}.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.48\textwidth}
+      \colheader{Automata Cycle Decomposition}
+      \vspace{0.05cm}
+      \begin{center}
+        \begin{tikzpicture}[node distance=1.35cm, auto]
+          \node[state, initial] (q0) {$q_0$}; 
+          \node[state] (q1) [right=of q0] {$q_j$}; 
+          \node[state, accepting] (q2) [right=of q1] {$q_{\text{acc}}$}; 
+          \path[->] 
+          (q0) edge node {$x$} (q1)
+          (q1) edge [loop above] node {$y$ (loop)} (q1)
+               edge node {$z$} (q2);
+        \end{tikzpicture}
+      \end{center}
+      \vspace{-0.15cm}
+      \footnotesize
+      Decompose string $s = xyz$ where:
+      \begin{itemize}\setlength{\itemsep}{1.5pt}\scriptsize
+        \item $x$: prefix driving $q_0 \to q_j$.
+        \item $y$: loop cycle driving $q_j \to q_j$ ($|y| > 0$).
+        \item $z$: suffix driving $q_j \to q_{\text{acc}}$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.06cm}
+  \begin{center}
+    \parbox{0.94\textwidth}{%
+      \centering\footnotesize\color{gimpanavy}
+      \textbf{Core Consequence:} The cycle $y$ can be pumped $i = 0, 1, 2, \dots$ times; the automaton cannot prevent $x y^i z$ from being accepted, proving language regularity.
+    }
+  \end{center}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 12: Week 5: The Pumping Lemma for Regular Languages
+% ------------------------------------------------------------------------------
+\begin{frame}{Week 5: The Pumping Lemma for Regular Languages}
+  \begin{tcolorbox}[conceptcard]
+    {\bfseries\footnotesize\color{gimpanavy} Formal Theorem Statement (Sipser Thm 1.70)}
+    \vspace{0.04cm}
+    \footnotesize
+    If $L$ is a regular language, then there exists a pumping length $p \ge 1$ such that every string $s \in L$ with $|s| \ge p$ can be divided into $s = xyz$ satisfying three conditions:
+    \begin{enumerate}\setlength{\itemsep}{1pt}
+      \item $x y^i z \in L$ for each $i \ge 0$ \quad (\textbf{Pumping Property}),
+      \item $|y| > 0$ \quad (\textbf{Non-empty Loop}),
+      \item $|xy| \le p$ \quad (\textbf{Loop Occurs within First $p$ Characters}).
+    \end{enumerate}
+  \end{tcolorbox}
+
+  \vspace{0.06cm}
+  \begin{tcolorbox}[alertcard]
+    {\bfseries\footnotesize\color{accentCrimson} Adversarial Proof Template: Showing $L = \{0^n 1^n \mid n \ge 0\}$ is Non-Regular}
+    \vspace{0.04cm}
+    \begin{enumerate}\setlength{\itemsep}{1.5pt}\scriptsize
+      \item \textbf{Proof by Contradiction:} Assume $L$ is regular. The Pumping Lemma guarantees a pumping length $p$.
+      \item \textbf{Select String:} Choose $s = 0^p 1^p \in L$. Observe that $|s| = 2p \ge p$.
+      \item \textbf{Constrain Substring $y$:} Since $|xy| \le p$, substring $y$ lies entirely within the initial block of zeros: $y = 0^k$ for $k \ge 1$.
+      \item \textbf{Pump Down ($i = 0$):} Consider $s' = x y^0 z = x z$. Symbol count: $|s'|_0 = p - k \neq p = |s'|_1$.
+      \item \textbf{Contradiction:} $s' \notin L$, violating Condition 1 $\implies$ \textbf{$L$ is strictly non-regular!}
+    \end{enumerate}
+  \end{tcolorbox}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% Slide 13: Summary & Module 2 Horizon
+% ------------------------------------------------------------------------------
+\begin{frame}{Module 1 Summary \& Looking Ahead to Module 2}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \colheader{Module 1 Key Scientific Takeaways}
+      \begin{tcolorbox}[conceptcard]
+        \begin{itemize}\setlength{\itemsep}{3.5pt}\scriptsize
+          \item \textbf{Model Equivalence:} DFAs, NFAs, and Regular Expressions possess identical expressive capability ($\mathcal{L}_{\text{Reg}}$).
+          \item \textbf{The Boundary of Memory:} Finite automata cannot track unbounded state; they are strictly incapable of counting ($0^n 1^n$) or verifying balanced syntax.
+          \item \textbf{Systems Impact:} Automata algorithms deliver deterministic $\mathcal{O}(n)$ performance in network routing and protect web services from ReDoS.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+
+    \hfill
+
+    \begin{column}{0.48\textwidth}
+      \colheader{Looking Ahead: Module 2 (Weeks 6--8)}
+      \begin{tcolorbox}[spotlightcard]
+        \begin{itemize}\setlength{\itemsep}{3.5pt}\scriptsize
+          \item \textbf{Parsing Programming Languages:} Compilers, JSON parsers, and LLM structured decoding require nested hierarchical syntax.
+          \item \textbf{The Stack Upgrade:} Augmenting finite automata with unbounded LIFO memory:
+            \begin{center}
+              \textbf{Finite Control} $+$ \textbf{Stack} $\implies$ \textbf{Pushdown Automata (PDAs)}
+            \end{center}
+          \item \textbf{Grammar Formalism:} \textbf{Context-Free Grammars (CFGs)} and Chomsky Normal Form.
+        \end{itemize}
+      \end{tcolorbox}
+    \end{column}
+  \end{columns}
+
+  \vspace{0.25cm}
+  \begin{center}
+    {\normalsize\bfseries\color{gimpanavy} Questions \& Discussion}\\[0.05cm]
+    {\footnotesize\color{gimpaslate} Preparation for Lab 1: Simulating DFAs \& NFAs with JFLAP / Python Automata}
+  \end{center}
 \end{frame}
 
 \end{document}
