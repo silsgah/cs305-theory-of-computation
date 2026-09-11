@@ -1,0 +1,369 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.7in,top=0.75in,bottom=0.75in]{geometry}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=gimpanavy,urlcolor=gimpanavy,citecolor=gimpaaccent]{hyperref}
+
+% --- Color Palette (Matching GIMPA CS 305 Standards) ---
+\definecolor{gimpanavy}{RGB}{0, 43, 73}       % GIMPA Dark Navy
+\definecolor{gimpaaccent}{RGB}{30, 115, 190}   % Deep Tech Blue
+\definecolor{gimpagold}{RGB}{197, 145, 22}     % Academic Gold Accent
+\definecolor{gimpalight}{RGB}{246, 248, 252}   % Soft Neutral Tint
+\definecolor{gimpaheader}{RGB}{232, 240, 250}  % Header Blue Tint
+\definecolor{darkgray}{RGB}{45, 45, 45}
+\definecolor{alertred}{RGB}{180, 40, 40}
+\definecolor{successgreen}{RGB}{30, 130, 60}
+
+% --- Typography & Styling ---
+\titleformat{\section}{\large\bfseries\color{gimpanavy}}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+
+\titleformat{\subsection}{\normalsize\bfseries\color{gimpaaccent}}{}{0em}{}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\titleformat{\subsubsection}{\small\bfseries\color{darkgray}}{}{0em}{}
+\titlespacing*{\subsubsection}{0pt}{6pt}{2pt}
+
+% --- Header & Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small\color{darkgray}\textbf{GIMPA} $|$ School of Technology}
+\lhead{\small\color{darkgray}\textbf{CS 305: Theory of Computation} --- Research Monograph}
+\rfoot{\small\color{darkgray}Page \thepage}
+\lfoot{\small\color{darkgray}DeepMind Study: Neural Networks \& The Chomsky Hierarchy}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% --- Custom Callout Boxes ---
+\tcbset{
+    colback=gimpalight,
+    colframe=gimpanavy,
+    fonttitle=\bfseries\color{white},
+    boxrule=0.8pt,
+    arc=3pt,
+    left=8pt,
+    right=8pt,
+    top=6pt,
+    bottom=6pt
+}
+
+\newtcolorbox{takeawaybox}[1]{
+    colback=gimpalight,
+    colframe=gimpanavy,
+    title=#1,
+    fonttitle=\bfseries\color{white},
+    boxrule=0.9pt,
+    arc=3pt
+}
+
+\newtcolorbox{alertbox}[1]{
+    colback=red!5!white,
+    colframe=alertred,
+    title=#1,
+    fonttitle=\bfseries\color{white},
+    boxrule=0.9pt,
+    arc=3pt
+}
+
+\newtcolorbox{pedagogybox}[1]{
+    colback=gimpaheader!40!white,
+    colframe=gimpaaccent,
+    title=#1,
+    fonttitle=\bfseries\color{white},
+    boxrule=0.9pt,
+    arc=3pt
+}
+
+\begin{document}
+
+% ==============================================================================
+% TITLE & HEADER
+% ==============================================================================
+\begin{center}
+    {\LARGE\bfseries\color{gimpanavy} Neural Networks and the Chomsky Hierarchy}\\[4pt]
+    {\large\bfseries\color{gimpaaccent} Empirical Limits of Neural Generalization \& Curricular Relevance to CS 305}\\[8pt]
+    {\normalsize\textbf{Author Analysis \& Pedagogical Integration for Theory of Computation (CS 305)}}\\[3pt]
+    {\small Ghana Institute of Management and Public Administration (GIMPA) $|$ School of Technology}\\
+    {\small Level 300 Bachelor of Science in Computer Science $|$ Academic Year 2026/2027}\\[8pt]
+    \rule{0.85\linewidth}{0.6pt}
+\end{center}
+
+\vspace{-6pt}
+\begin{takeawaybox}{Executive Summary \& Primary Citation}
+\textbf{Paper Citation:} Del{\'e}tang, G., Ruoss, A., Grau-Moya, J., Genewein, T., Wenliang, L. K., Catt, E., Cundy, C., Hutter, M., Legg, S., Veness, J., \& Ortega, P. A. (2023). \textit{Neural Networks and the Chomsky Hierarchy}. International Conference on Learning Representations (\textbf{ICLR 2023}). DeepMind \& University of Oxford.\\
+\textbf{Core Finding:} Neural network architectures do not generalize uniformly. By evaluating \textbf{20,910 trained models} across \textbf{15 algorithmic transduction tasks}, DeepMind proved empirically that \textbf{an architecture's out-of-distribution (OOD) length generalization is fundamentally bounded by its formal computational class on the Chomsky Hierarchy}. Recurrent Neural Networks (RNNs) and standard Transformers fail on non-regular tasks; Long Short-Term Memory (LSTM) networks succeed only up to counter languages; only architectures explicitly augmented with structured external memory (Stack-RNNs for Context-Free tasks, Tape-RNNs for Context-Sensitive tasks) successfully generalize to longer algorithmic sequences.
+\end{takeawaybox}
+
+% ==============================================================================
+% SECTION 1: THE CENTRAL PARADOX
+% ==============================================================================
+\section{1. The Research Motivation: The Central Paradox of Deep Learning}
+
+In contemporary machine learning, the dominant paradigm for measuring generalization is \textbf{Statistical Learning Theory} (Vapnik, 1998), which assumes that training and test samples are drawn independently and identically distributed ($i.i.d.$) from the same underlying distribution $\mathcal{D}$:
+\begin{equation}
+    (x_{train}, y_{train}) \sim \mathcal{D}, \quad (x_{test}, y_{test}) \sim \mathcal{D}.
+\end{equation}
+
+Under the $i.i.d.$ assumption, modern Deep Neural Networks (DNNs) achieve state-of-the-art results on NLP, computer vision, and code synthesis. However, real-world robust AI requires \textbf{Out-of-Distribution (OOD) Generalization} and \textbf{Algorithmic Extrapolation}---specifically, learning an underlying generative rule on small instances (e.g., strings of length $n \le 40$) and executing that exact procedure faithfully on arbitrarily long instances ($n > 40$, up to $n = 500$ or $\infty$).
+
+\subsection{Theoretical Turing-Completeness vs. Practical Realizability}
+A major source of confusion in computer science literature is the gap between asymptotic expressivity and practical learnability:
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+    \item \textbf{Theoretical Universal Expressivity:} Classical theorems establish that Recurrent Neural Networks with infinite precision weights (Siegelmann \& Sontag, 1994) and standard Transformers with unbounded precision or dynamic length (P{\'e}rez et al., 2019, 2021) are \textbf{Turing-complete}.
+    \item \textbf{The Practical Reality:} Real-world models operate with finite float precision, finite compute budgets, and are optimized via stochastic gradient descent (Adam/SGD). When trained on algorithmic sequence tasks, standard models fail catastrophically as soon as the sequence length exceeds the training envelope.
+\end{itemize}
+
+DeepMind's landmark paper replaces statistical heuristics with \textbf{Formal Language Theory}, asking: \textit{Can the 70-year-old Chomsky Hierarchy serve as a rigorous predictive framework for the empirical generalization boundaries of modern neural networks?}
+
+% ==============================================================================
+% SECTION 2: THEORETICAL FORMULATION
+% ==============================================================================
+\section{2. Theoretical Framework: Languages, Automata, and Transduction}
+
+\subsection{The Chomsky Hierarchy of Formal Languages}
+In formal language theory (Chomsky, 1956; Sipser, 2013), an alphabet $\Sigma$ is a non-empty finite set of symbols, and a language $L \subseteq \Sigma^*$ is a set of finite-length strings. The Chomsky Hierarchy classifies grammars and their recognized languages according to the production rules and the corresponding minimal computational automaton required:
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{p{2.4cm} p{3.2cm} p{3.4cm} X}
+\toprule
+\rowcolor{gimpaheader}
+\textbf{Grammar Level} & \textbf{Minimal Automaton} & \textbf{Memory Structure} & \textbf{Production Constraint} \\
+\midrule
+\textbf{Regular ($L_3$)} & Finite-State Automaton (DFA/NFA) & Internal state ($O(1)$ memory) & $A \to a$ or $A \to aB$ \\
+\rowcolor{gimpalight}
+\textbf{Context-Free ($L_2$)} & Pushdown Automaton (PDA) & Unbounded LIFO Stack (top access) & $A \to \alpha$ \\
+\textbf{Context-Sensitive ($L_1$)} & Linear Bounded Automaton (LBA) & Bounded Tape (size $O(n)$) & $\alpha A \beta \to \alpha \gamma \beta \;\; (|\gamma| \ge |A|)$ \\
+\rowcolor{gimpalight}
+\textbf{Recursively Enumerable ($L_0$)} & Turing Machine (TM) & Unbounded Read/Write Tape & $\gamma \to \alpha \;\; (\gamma \neq \epsilon)$ \\
+\bottomrule
+\end{tabularx}
+\caption{The Chomsky Hierarchy, associated automata, and memory models.}
+\label{tab:chomsky}
+\end{table}
+
+\subsection{Formulation: From Language Recognition to Language Transduction}
+Classical theory defines formal languages via \textbf{decision problems} (recognition):
+\begin{equation}
+    f_{\text{rec}}: \Sigma^* \to \{0, 1\} \quad \text{where } f_{\text{rec}}(w) = 1 \iff w \in L.
+\end{equation}
+However, modern sequence-to-sequence neural networks (such as Transformers and RNNs) perform \textbf{language transduction}, mapping an input string to an output string:
+\begin{equation}
+    f_{\text{trans}}: \Sigma_I^* \to \Sigma_O^* \quad \text{where } y = f_{\text{trans}}(x).
+\end{equation}
+Importantly, the computational automata required for language transduction are identical to those for recognition, but equipped with output emission transitions (e.g., Mealy/Moore machines for regular languages, pushdown transducers for context-free languages, and Turing transducers for general computation).
+
+\subsection{Experimental Length-Generalization Protocol}
+To evaluate genuine algorithmic learning rather than rote memorization:
+\begin{enumerate}[leftmargin=1.5em, itemsep=2pt]
+    \item \textbf{Training Distribution:} Strings sampled with length $\ell \sim \mathcal{U}(1, N)$ where $N = 40$.
+    \item \textbf{Out-of-Distribution Test Distribution:} Strings sampled with length $\ell \sim \mathcal{U}(N+1, M)$ where $M = 500$ (over $12.5\times$ longer than the maximum training length).
+    \item \textbf{Success Criterion:} An architecture is considered to successfully generalize if its test accuracy across the entire out-of-distribution range $[41, 500]$ satisfies:
+    \begin{equation}
+        \text{Score} = \frac{1}{M - N} \sum_{\ell = N+1}^{M} \text{Acc}(\ell) \ge 90.0\%.
+    \end{equation}
+\end{enumerate}
+
+% ==============================================================================
+% SECTION 3: ARCHITECTURES EVALUATED
+% ==============================================================================
+\section{3. Neural Network Architectures \& Memory Augmentation}
+
+The DeepMind benchmark systematically compared five foundational architectural families:
+
+\begin{figure}[htbp]
+\centering
+\begin{tcolorbox}[colback=white, colframe=gimpanavy, boxrule=0.5pt, arc=2pt]
+\small
+\begin{description}[leftmargin=1.2em, itemsep=4pt]
+    \item[\textbf{1. Vanilla Recurrent Neural Network (RNN):}] Employs a dense hidden vector $\mathbf{h}_t = \tanh(W \mathbf{x}_t + U \mathbf{h}_{t-1} + \mathbf{b})$. The hidden state $\mathbf{h}_t$ must simultaneously compress past history and serve as computational working memory. Because $\mathbf{h}_t \in \mathbb{R}^d$ has fixed dimension, it corresponds computationally to a continuous \textbf{Finite-State Machine}.
+    \item[\textbf{2. Long Short-Term Memory (LSTM):}] Introduces additive cell state updates $\mathbf{c}_t = \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{c}}_t$ regulated by input, forget, and output gates. The linear cell update avoids vanishing gradients and allows neurons to behave as \textbf{continuous counters}, theoretically enabling recognition of Counter Languages (a subset of Deterministic Context-Free Languages).
+    \item[\textbf{3. Stack-RNN:}] An RNN controller augmented with a differentiable continuous stack memory (Joulin \& Mikolov, 2015). At each step, the controller emits soft action probabilities for $\{\text{PUSH}, \text{POP}, \text{NO\_OP}\}$ and a content vector $\mathbf{v}_t$. The memory behaves as a LIFO buffer, mimicking a \textbf{Pushdown Automaton (PDA)}.
+    \item[\textbf{4. Tape-RNN:}] An RNN controller augmented with an external random-access read/write tape and movable heads (inspired by Neural Turing Machines; Graves et al., 2014, 2016). The head can execute $\{\text{Write-Stay}, \text{Write-Left}, \text{Write-Right}, \text{Jump-Left}, \text{Jump-Right}\}$. This explicitly models a \textbf{Linear Bounded Automaton (LBA)} or \textbf{Turing Machine (TM)}.
+    \item[\textbf{5. Transformer (Self-Attention):}] Multi-head scaled dot-product attention network:
+    \begin{equation}
+        \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V.
+    \end{equation}
+    Evaluated with five positional encoding schemes: No Positional Encoding, Standard Sinusoidal, ALiBi (Attention with Linear Biases), RoPE (Rotary Position Embeddings), and Transformer-XL recurrence.
+\end{description}
+\end{tcolorbox}
+\end{figure}
+
+% ==============================================================================
+% SECTION 4: EMPIRICAL RESULTS & SYNTHESIS
+% ==============================================================================
+\section{4. Main Findings and Empirical Results}
+
+Table~\ref{tab:results} summarizes the benchmark generalization scores across 20,910 trained models evaluated on the 15 algorithmic tasks.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\linewidth}{p{1.4cm} p{3.2cm} *{5}{>{\centering\arraybackslash}X}}
+\toprule
+\rowcolor{gimpaheader}
+\textbf{Level} & \textbf{Transduction Task} & \textbf{RNN} & \textbf{LSTM} & \textbf{Transf.} & \textbf{Stack-RNN} & \textbf{Tape-RNN} \\
+\midrule
+\rowcolor{gimpalight}\multicolumn{7}{l}{\textbf{Regular Languages ($L_3$) --- Minimal Automaton: Finite-State Automaton (DFA/NFA)}} \\
+& Even Pairs & \textbf{100.0} & \textbf{100.0} & \textbf{96.4} & \textbf{100.0} & \textbf{100.0} \\
+& Modular Arithmetic (Simple) & \textbf{100.0} & \textbf{100.0} & 24.2 & \textbf{100.0} & \textbf{100.0} \\
+& Parity Check$^\dagger$ & \textbf{100.0} & \textbf{100.0} & 52.0 & \textbf{100.0} & \textbf{100.0} \\
+& Cycle Navigation$^\dagger$ & \textbf{100.0} & \textbf{100.0} & 61.9 & \textbf{100.0} & \textbf{100.0} \\
+\midrule
+\rowcolor{gimpalight}\multicolumn{7}{l}{\textbf{Deterministic Context-Free Languages ($L_2$) --- Minimal Automaton: Pushdown Automaton (PDA)}} \\
+& Stack Manipulation & 56.0 & 59.1 & 57.5 & \textbf{100.0} & \textbf{100.0} \\
+& Reverse String ($w^R$) & 62.0 & 60.9 & 62.3 & \textbf{100.0} & \textbf{100.0} \\
+& Modular Arithmetic (Nested) & 41.3 & 59.2 & 32.5 & \textbf{96.1} & \textbf{95.4} \\
+& Solve Equation$^\circ$ & 51.0 & 67.8 & 25.7 & 56.2 & 64.4 \\
+\midrule
+\rowcolor{gimpalight}\multicolumn{7}{l}{\textbf{Context-Sensitive Languages ($L_1$) --- Minimal Automaton: Linear Bounded Automaton (LBA)}} \\
+& Duplicate String ($ww$) & 50.3 & 57.6 & 52.8 & 52.8 & \textbf{100.0} \\
+& Missing Duplicate & 52.3 & 54.3 & 56.4 & 55.2 & \textbf{100.0} \\
+& Odds First & 51.0 & 55.6 & 52.8 & 51.9 & \textbf{100.0} \\
+& Binary Addition & 50.3 & 55.5 & 54.3 & 52.7 & \textbf{100.0} \\
+& Binary Multiplication$^\times$ & 50.0 & 53.1 & 52.2 & 52.7 & 58.5 \\
+& Compute Sqrt & 54.3 & 57.5 & 52.4 & 56.5 & 57.8 \\
+& Bucket Sort$^{\dagger\star}$ & 27.9 & \textbf{99.3} & \textbf{91.9} & 78.1 & 70.7 \\
+\bottomrule
+\end{tabularx}
+\caption{OOD length generalization score ($\ge 90.0\%$ in \textbf{bold}). Random guessing baseline is 50.0\% (20.0\% for modular tasks). Annotations: $^\dagger$Permutation-invariant; $^\star$Counting task; $^\circ$Requires non-deterministic search; $^\times$Requires superlinear computational time.}
+\label{tab:results}
+\end{table}
+
+\subsection{Key Empirical Insights from the Results}
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{Exact Architectural Hierarchy Alignment:}
+    \begin{itemize}
+        \item \textbf{RNN $\approx$ Finite Automaton ($L_3$):} Successfully masters all Regular language tasks (100.0\% on Even Pairs, Parity, Modular Simple, Cycle Navigation) but drops immediately to near-chance performance on Context-Free tasks (e.g., 56.0\% on Stack Manipulation, 62.0\% on Reverse String).
+        \item \textbf{Stack-RNN $\approx$ Pushdown Automaton ($L_2$):} Perfect 100.0\% generalization on deterministic context-free tasks requiring nested LIFO storage (Reverse String, Stack Manipulation, Nested Arithmetic), but completely fails on Context-Sensitive tasks requiring cross-serial dependencies ($ww$ Duplicate String: 52.8\%).
+        \item \textbf{Tape-RNN $\approx$ Linear Bounded Automaton ($L_1$):} The \textit{only} architecture that generalizes on Context-Sensitive tasks ($ww$ Duplicate String: 100.0\%, Missing Duplicate: 100.0\%, Odds First: 100.0\%, Binary Addition: 100.0\%).
+    \end{itemize}
+
+    \item \textbf{The LSTM Counter-Language Anomaly:}
+    LSTMs surpass standard RNNs on certain tasks because their linear cell state $\mathbf{c}_t$ acts as an unbounded numerical accumulator. Consequently, LSTMs solve \textbf{Counter Languages} (e.g., Bucket Sort at 99.3\%, which requires tracking token counts). However, because a scalar counter cannot preserve sequence order, LSTMs fail on Reverse String (60.9\%) and general context-free parsing.
+
+    \item \textbf{The Failure Modes of Standard Transformers:}
+    Despite powering modern Large Language Models (GPT-4, Claude, Gemini), standard Transformers exhibited severe algorithmic limitations:
+    \begin{itemize}
+        \item \textbf{Failure on Regular Permutation-Invariant Tasks:} Transformers failed on Parity Check (52.0\%, essentially random coin-flip). Soft-max attention over large sequence lengths dilutes attention weights ($\frac{1}{n}$ diffusion), and positional encodings break permutation invariance.
+        \item \textbf{Out-of-Distribution Positional Encoding Breakdown:} When sequence lengths exceed the training window ($n > 40$), positional embeddings (whether Absolute, RoPE, or ALiBi) produce representation values never seen during training, driving first-layer activations out-of-distribution (confirmed via PCA in Figure 4 of the paper).
+    \end{itemize}
+
+    \item \textbf{Computational Complexity Bottlenecks ($P$ vs. Real-Time Bounds):}
+    Tape-RNNs failed on \textbf{Binary Multiplication} (58.5\%) and \textbf{Compute Square Root} (57.8\%). This is not because LBAs cannot represent multiplication, but because standard recurrent models are constrained to $O(n)$ time steps. Multi-digit binary multiplication fundamentally requires $\Omega(n^2)$ bit operations (or superlinear time). Constraining the neural network to a single pass without extra computational time steps makes length generalization mathematically impossible.
+\end{enumerate}
+
+% ==============================================================================
+% SECTION 5: MECHANISTIC INTERPRETABILITY
+% ==============================================================================
+\section{5. Mechanistic Interpretability: What Did the Networks Learn?}
+
+A profound contribution of the DeepMind study was probing the internal learned representations of successful models to determine whether they discovered genuine classical automata algorithms:
+
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{RNN on Parity Check (DFA Reconstruction):}
+    Dimensionality reduction (PCA) of the RNN hidden states $\mathbf{h}_t$ revealed that the continuous vector space self-organized into \textbf{two distinct topological attractor clusters}, corresponding exactly to state $q_{\text{even}}$ and state $q_{\text{odd}}$ in the canonical 2-state Parity DFA.
+    \item \textbf{Stack-RNN on Nested Modular Arithmetic (PDA Reconstruction):}
+    Analysis of the Stack-RNN's continuous memory operations revealed that the network autonomously learned the textbook parsing algorithm:
+    \begin{equation}
+        \sigma(x_t) = \begin{cases}
+            \text{PUSH} & \text{if } x_t = \text{`(' (open bracket, saving accumulator)}, \\
+            \text{NO\_OP} & \text{if } x_t \in \{0, 1, 2, 3, 4, +, -, *\} \text{ (internal controller arithmetic)}, \\
+            \text{POP} & \text{if } x_t = \text{`)'} \text{ (close bracket, retrieving outer context)}.
+        \end{cases}
+    \end{equation}
+    \item \textbf{Tape-RNN on Duplicate String (Turing Machine Head Trajectory):}
+    Inspection of the Tape-RNN's read/write heads on $w \to ww$ showed discrete phases: (i) sequential storage of $w$ using \texttt{WRITE-LEFT}, (ii) head relocation via \texttt{JUMP-RIGHT}, and (iii) emission of duplicate tokens while tracking tape boundaries.
+\end{itemize}
+
+% ==============================================================================
+% SECTION 6: CURRICULAR CONNECTIONS TO CS 305
+% ==============================================================================
+\section{6. Curricular Alignment: Integrating DeepMind's Findings into CS 305}
+
+The DeepMind paper provides a gold standard bridge between theoretical automata and 21st-century Artificial Intelligence. Below is the direct pedagogical mapping to the four core modules of GIMPA's \textbf{CS 305: Theory of Computation}:
+
+\begin{pedagogybox}{Module-by-Module Integration for CS 305}
+\begin{description}[leftmargin=1.2em, itemsep=6pt]
+    \item[\textbf{Module 1: Regular Languages \& Finite Automata (Weeks 1--4)}]
+    \begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+        \item \textbf{Course Concept:} DFAs, NFAs, state minimization, Pumping Lemma for Regular Languages.
+        \item \textbf{DeepMind Connection:} The paper proves that Vanilla RNNs are the exact neural analogue of DFAs. The hidden state vector $\mathbf{h}_t$ represents the state transition function $\delta(q, a)$.
+        \item \textbf{Lecture Case Study:} Demonstrate how Parity Check ($L = \{w \in \{0,1\}^* \mid |w|_1 \text{ is even}\}$) requires exactly 2 states in a DFA. Show why Transformers fail this simple regular task without recurrence, while RNNs achieve 100\% generalization.
+    \end{itemize}
+
+    \item[\textbf{Module 2: Context-Free Languages \& Pushdown Automata (Weeks 5--7)}]
+    \begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+        \item \textbf{Course Concept:} Context-Free Grammars (CFGs), Non-regularity proofs ($0^n 1^n$), PDAs, Stack memory.
+        \item \textbf{DeepMind Connection:} Why can't GPT or vanilla RNNs reliably evaluate deeply nested arithmetic expressions or parse deeply nested code without Chain-of-Thought? Because fixed hidden states cannot implement an unbounded LIFO stack.
+        \item \textbf{Lecture Case Study:} Compare the failure of Vanilla RNNs on Reverse String ($w^R$) with the 100\% success of Stack-RNNs, proving that stack memory is mathematically necessary for $L_2$ transduction.
+    \end{itemize}
+
+    \item[\textbf{Module 3: Turing Machines \& The Chomsky Hierarchy (Weeks 8--10)}]
+    \begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+        \item \textbf{Course Concept:} Turing Machines (TM), Linear Bounded Automata (LBA), Decidability, Non-context-free languages ($ww, a^n b^n c^n$).
+        \item \textbf{DeepMind Connection:} The paper demonstrates that language $L = \{ww\}$ (Duplicate String) is impossible for both RNNs and Stack-RNNs, but is mastered (100\%) by Tape-RNNs.
+        \item \textbf{Lecture Case Study:} Introduce Neural Turing Machines (NTMs) and Tape-RNNs as differentiable realizations of the classical 7-tuple Turing Machine $(Q, \Sigma, \Gamma, \delta, q_0, q_{accept}, q_{reject})$.
+    \end{itemize}
+
+    \item[\textbf{Module 4: Computational Complexity \& Modern AI Limits (Weeks 11--14)}]
+    \begin{itemize}[leftmargin=1.2em, itemsep=2pt]
+        \item \textbf{Course Concept:} Time and Space Complexity ($P, NP$), Circuit Complexity ($TC^0, NC^1$).
+        \item \textbf{DeepMind Connection:} Why did Tape-RNN fail on Binary Multiplication? Because the model was forced to execute in linear time $O(n)$, whereas multi-digit multiplication has intrinsic computational complexity $\Omega(n \log n)$ or $\Omega(n^2)$.
+        \item \textbf{Modern LLM Parallel:} Explain why \textbf{Chain-of-Thought (CoT)} prompting works in LLMs: CoT generates intermediate reasoning tokens, converting a constant-depth circuit ($TC^0$) into a dynamic-step Turing tape.
+    \end{itemize}
+\end{description}
+\end{pedagogybox}
+
+% ==============================================================================
+% SECTION 7: CLASSROOM ASSIGNMENTS & DISCUSSION QUESTIONS
+% ==============================================================================
+\section{7. Recommended Student Projects \& Exam Questions for CS 305}
+
+To reinforce these concepts, the following theoretical and programming assignments are designed for Level 300 students:
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=6pt]
+    \item \textbf{Pumping Lemma vs. Neural Generalization (Analytical Exercise):}
+    \textit{Problem:} Use the Pumping Lemma for Context-Free Languages to prove that $L = \{w w \mid w \in \{0, 1\}^*\}$ is not context-free. Based on the DeepMind empirical results, explain why a Stack-RNN achieved only 52.8\% test accuracy on this task, while a Tape-RNN achieved 100.0\%.
+    
+    \item \textbf{The Parity Failure of Transformers (Theoretical Short Answer):}
+    \textit{Problem:} Parity is in $L_3$ (Regular) and can be decided by a 2-state DFA. Explain in terms of attention mechanisms and circuit depth why standard self-attention without recurrence struggles to compute parity over sequences of length 500 when trained only on length 40.
+    
+    \item \textbf{Chain-of-Thought as an External Tape (Discussion Topic):}
+    \textit{Problem:} Modern autoregressive LLMs (e.g., Gemini, GPT-4) do not have external tape heads like a Tape-RNN. However, when instructed to ``think step-by-step'' (Chain-of-Thought), their performance on arithmetic and code generation surges. Explain how the generated scratchpad tokens effectively function as the write-head of a Linear Bounded Automaton.
+\end{enumerate}
+
+% ==============================================================================
+% SECTION 8: CONCLUSION
+% ==============================================================================
+\section{8. Conclusion}
+
+The DeepMind study by Del{\'e}tang et al.\ firmly establishes that \textbf{the Chomsky Hierarchy is not merely a historical relic of 1950s linguistics, but the fundamental governing law of neural network length generalization}. 
+
+For students in \textbf{CS 305: Theory of Computation} at GIMPA, this research provides the ultimate justification for studying formal automata: the exact mathematical boundaries separating DFAs, PDAs, LBAs, and Turing Machines dictate where modern AI succeeds, where it fails, and how future neuro-symbolic architectures must be designed.
+
+\vspace{12pt}
+\begin{center}
+    \rule{0.6\linewidth}{0.4pt}\\[6pt]
+    {\footnotesize\color{darkgray}Monograph prepared for CS 305 (Theory of Computation) $|$ GIMPA School of Technology $|$ Academic Year 2026/2027}
+\end{center}
+
+\end{document}
